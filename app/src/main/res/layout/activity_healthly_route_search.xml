@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#c9ffe984">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <com.beardedhen.androidbootstrap.BootstrapEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left"
+            android:hint=" IDを入力してください"
+            bootstrap:be_roundedCorners="true"
+            bootstrap:be_state="success"
+            android:id="@+id/search_id"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:inputType="number|text"
+            android:textColorHint="#55000000" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="visible">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/route_list"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/not_found_linear">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="検索結果が見つかりません"
+                android:id="@+id/textView5"
+                android:layout_gravity="center_horizontal"
+                android:textSize="25dp"
+                android:layout_marginTop="90dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IDを入力すると登録されているルートを\n検索することができます。"
+                android:id="@+id/textView6"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:gravity="center" />
+            <com.beardedhen.androidbootstrap.FontAwesomeText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                bootstrap:fa_icon="fa-frown-o"
+                android:textSize="180dp"
+                android:gravity="center"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dummyEditText"
+        android:visibility="invisible" />
+
+
+</LinearLayout>

@@ -1,0 +1,274 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>KitanoPoint</name>
+		<Placemark>
+			<name>横断歩道南</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.352451,35.645132,0.0 139.352466,35.645112,0.0 139.352464,35.645095,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>駅のはずれ4</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.352283,35.644813,0.0 139.352299,35.64484,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>駅のはずれ1</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.352179,35.644751,0.0 139.352208,35.644741,0.0 139.352216,35.64473,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>駅のはずれ3</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.352211,35.644807,0.0 139.352234,35.644799,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>駅のはずれ2</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.352372,35.644735,0.0 139.352399,35.644747,0.0 139.352409,35.644749,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>駅のはずれ5</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.353096,35.644716,0.0 139.353127,35.644709,0.0 139.353135,35.644702,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>横断歩道北</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3525446,35.6451444,0.0 139.3525527,35.6451357,0.0 139.352558,35.645109,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>南口階段</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3526962,35.645043,0.0 139.3527196,35.6450757,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>横断歩道南曲がり角</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.352447,35.64511,0.0 139.3524481,35.6451052,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>バス停1分岐</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3523649,35.6449629,0.0 139.3523622,35.6449569,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>バス停1出口</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3523783,35.6449542,0.0 139.3523756,35.6449482,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>バス停1入口</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3523609,35.6449286,0.0 139.3523575,35.6449204,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>バス停1曲がり角</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3523475,35.6449308,0.0 139.3523441,35.6449253,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>南口階段下分岐</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3526888,35.6450654,0.0 139.3526948,35.6450616,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>バス停2方面曲がり角1</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3526573,35.6450125,0.0 139.352662,35.6450087,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>旧バス停入口分岐</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.35272300000003,35.6449809,0.0 139.3527297,35.644978200000004,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>旧バス停入口</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3527156,35.64497,0.0 139.35272300000003,35.6449657,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>旧バス停出口分岐</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3527558,35.6449646,0.0 139.3527626,35.6449613,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>旧バス停出口</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3527512,35.6449509,0.0 139.3527572,35.644946,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>エレベーター</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3527967,35.6449711,0.0 139.3527921,35.6449624,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>エレベーター前分岐</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3528055,35.6449657,0.0 139.3528008,35.6449591,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>バス停2方面曲がり角2</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3527867,35.6449537,0.0 139.3527947,35.6449493,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>バス停2入口分岐</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3528759,35.6449357,0.0 139.3528812,35.6449313,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>バス停2入口</name>
+			<styleUrl>#line-FF5500-3-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>139.3528531,35.6449079,0.0 139.3528618,35.6449041,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Style id='line-FF5500-3-nodesc-normal'>
+			<LineStyle>
+				<color>ff0055FF</color>
+				<width>3</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id='line-FF5500-3-nodesc-highlight'>
+			<LineStyle>
+				<color>ff0055FF</color>
+				<width>5.0</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<StyleMap id='line-FF5500-3-nodesc'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#line-FF5500-3-nodesc-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#line-FF5500-3-nodesc-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>

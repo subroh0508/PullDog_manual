@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/manual_first"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        style="@style/TitleLayout"
+        android:id="@+id/title_layout_manual1"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+
+        <com.beardedhen.androidbootstrap.FontAwesomeText
+            android:textSize="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            app:fa_icon="fa-tags"/>
+        <TextView
+            style="@style/TitleText"
+            android:text="@string/manual_title"
+            android:id="@+id/title_text_manual1" />
+        <com.beardedhen.androidbootstrap.FontAwesomeText
+            android:textSize="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            app:fa_icon="fa-tags"/>
+    </LinearLayout>
+
+    <TextView
+        style="@style/ContentText"
+        android:id="@+id/content_text_manual1"
+        android:text="@string/manual_content1"
+        android:layout_below="@+id/title_layout_manual1"
+        android:layout_alignParentStart="true"/>
+
+    <ImageView
+        style="@style/ContentImage"
+        android:src="@drawable/manual_1"
+        android:layout_below="@+id/content_text_manual1"
+        android:layout_marginTop="20dp" />
+</RelativeLayout>

@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">Pulldog</string>
+    <string name="title_activity_main">Pull Dog</string>
+    <string name="package_name">kei.balloon.pulldog</string>
+
+    <string name="input_destination">目的地を入力してください</string>
+    <string name="input_tweet">Tweetする文字を入力してください</string>
+    <string name="Incompatible">音声入力に非対応の端末です</string>
+
+    <string name="twitter_consumer_key">bqIdiovPtqeW4dhpBMD63PNVq</string>
+    <string name="twitter_consumer_secret">cSB3wVauoiApr5MlMnTmSi4rkG276ibYw7OMYOC2VGCObt1EXn</string>
+    <string name="twitter_callback_url">gabu://twitter</string>
+    <string name="twitter_putExtra_key">TWEET_STRING</string>
+
+    <string name="user_latlng">USER_LATLNG</string>
+
+    <string name="route_make_mode">ルート作成</string>
+
+    <string name="fail_01">このIDは既に使われています/n別のIDを入力してください</string>
+    <string name="fail_02">IDが入力されていません</string>
+    <string name="fail_03">名前が入力されていません</string>
+    <string name="fail_04">アップロードに失敗しました</string>
+    <string name="fail_05">アップロードに失敗しました</string>
+    <string name="fail_06">アップロードするデータがありません</string>
+    <string name="fail_07">サーバーへの保存に失敗しました</string>
+    <string name="success">アップロードに成功しました</string>
+
+    <string name="title"><u>PULL DOGルート作成モード</u></string>
+    <string name="intro_content">
+        \u0020\u0020このモードでは、あなたが歩いた道を視覚障がい者用のナビゲーションルートとして記録し、
+        サーバー上で共有します。階段・複雑な分岐・車通りの多い道など、危険の多い場所を除外した
+        安全なルートを簡単に作成できます。\n\n
+        \u0020\u0020ルートの作成は、次ページからの使用方法および注意事項に従ってください。\n
+    </string>
+
+    <string name="manual_title"><u>使用方法</u></string>
+    <string name="manual_content1">1．歩くルートを決める</string>
+    <string name="manual_content2">2．画面右下のボタンをクリックし、ルートの記録を開始する</string>
+    <string name="manual_content3">3．1で決めたルートの上を実際に歩く</string>
+    <string name="manual_content4">4．ルートの終端に着いたら、音声で「記録終了」と入力しルートの記録を終了する</string>
+    <string name="manual_content5">5．記録したルートの名前とIDを入力し、アップロードボタンを押してデータをアップロードする</string>
+
+    <string name="remarks_title"><u>備考</u></string>
+    <string name="remarks_content1">
+        \u0020\u0020ルートの途中に危険箇所や目印となるスポットがある場合、それらの位置情報をアップロードできます。\n
+        \u0020\u0020位置情報のアップロードは、記録画面下部に必要な情報を入力し登録ボタンを押すことで実行します。
+    </string>
+    <string name="remarks_content2">
+        \n[必要な情報]\n
+        ・位置情報の名称(例:横断歩道、郵便ポスト)\n
+        ・位置情報の属性(2つのうちどちらかを選択)
+    </string>
+
+    <string name="caution_title"><u>注意事項</u></string>
+    <string name="caution_content1">
+        スピードを出すと位置測位の精度が落ちます。記録中は、必ずゆっくり歩くようにしてください。
+    </string>
+    <string name="caution_content2">
+        既に歩いた道を戻ったり、往復したりしないでください。
+    </string>
+    <string name="caution_content3">
+        ルートの記録は、晴天時に行うことを推奨します。
+    </string>
+    
+    <string name="speech_recognize_fail">音声入力に失敗しました。もう一度音声を入力してください。</string>
+    <string name="search_fail">検索結果が見つかりません。もう一度入力を行ってください。</string>
+    <string name="finish">目的地に到着しました。案内を終了します。</string>
+
+    <string name="kenjosya_route_create">記録</string>
+    <string name="kenjosya_route_create_finish">保存</string>
+    <string name="kenjosya_route_save">取得</string>
+    <string name="kenjosya_route_use">案内開始</string>
+    <string name="recoding_error">みちびきの電波の届かない場所にいます</string>
+
+</resources>

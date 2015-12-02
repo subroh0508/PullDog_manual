@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/map"
+        tools:context=".MapsActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_weight="100"
+        android:layout_gravity="center" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="0dp">
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="125dp"
+            android:background="@drawable/background_top">
+
+            <ImageButton
+                android:layout_width="177dp"
+                android:layout_height="99dp"
+                android:background="@drawable/pulldog_logo"
+                android:layout_gravity="left|top"
+                android:id="@+id/pd_icon"
+                android:layout_marginLeft="20dp" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:background="@drawable/balloonlarge"
+                android:layout_marginLeft="50dp"
+                android:layout_gravity="left|bottom"
+                android:layout_marginBottom="25dp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/background_bottom"
+            android:layout_gravity="bottom"
+            android:id="@+id/main_bottom">
+
+            <ImageView
+                android:layout_width="335dp"
+                android:layout_height="80dp"
+                android:background="@drawable/text"
+                android:layout_gravity="bottom|right" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="#ffffc54d"
+            android:id="@+id/information_layout"
+            android:layout_gravity="bottom">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.01"
+                android:layout_gravity="bottom">
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/info_type">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="危険箇所"
+                        android:id="@+id/radio_btn_kiken"
+                        android:checked="true"
+                        android:textSize="13dp" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="スポット"
+                        android:id="@+id/radio_btn_spot"
+                        android:textSize="13dp" />
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:background="#ffffc54d"
+                android:layout_gravity="bottom">
+
+                <com.beardedhen.androidbootstrap.BootstrapEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|left"
+                    android:hint=" 例：横断歩道"
+                    bootstrap:be_roundedCorners="true"
+                    bootstrap:be_state="success"
+                    android:id="@+id/info_edittext"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:inputType="text"
+                    android:layout_marginBottom="8dp"
+                    android:textColorHint="#55000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center|center_vertical|center_horizontal"
+                android:layout_gravity="bottom">
+
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="登録"
+                    bootstrap:bb_icon_right="fa-check"
+                    bootstrap:bb_type="success"
+                    bootstrap:bb_roundedCorners="true"
+                    bootstrap:bb_size="small"
+                    android:id="@+id/regist_btn"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+
+                    android:layout_marginBottom="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/debug_layout"
+        android:background="#fff38a">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="方向："
+                    android:id="@+id/d_txt"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/direction"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="方位"
+                    android:id="@+id/orientation"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/orient_txt"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rt_pos_txt"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="出発地"
+                android:id="@+id/departure_txt"
+                android:textSize="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目的地"
+                android:id="@+id/destination_txt"
+                android:textSize="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="N:n/a E:n/a"
+                android:id="@+id/latlng"
+                android:textSize="10dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="QZSS"
+                android:id="@+id/data_source"
+                android:textSize="10dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OFF"
+                android:id="@+id/pushsw_text"
+                android:textSize="7dp"
+                android:enabled="true"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:textSize="7dp"
+                android:enabled="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:textSize="7dp"
+                android:enabled="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                android:textSize="7dp"
+                android:enabled="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:textSize="7dp"
+                android:enabled="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/route"
+                android:textSize="10dp"
+                android:enabled="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lat"
+                android:id="@+id/lat"
+                android:layout_weight="1"
+                android:textSize="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lng"
+                android:id="@+id/lng"
+                android:layout_weight="1"
+                android:textSize="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▲"
+                android:id="@+id/lat_up"
+                android:layout_weight="1"
+                android:textSize="5dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:id="@+id/lat_down"
+                android:layout_weight="1"
+                android:textSize="5dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="◀"
+                android:id="@+id/lng_down"
+                android:layout_weight="1"
+                android:textSize="5dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▶"
+                android:id="@+id/lng_up"
+                android:layout_weight="1"
+                android:textSize="5dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▲"
+                android:id="@+id/id_up"
+                android:layout_weight="0.1" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:id="@+id/id_down"
+                android:layout_weight="0.1" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tag_num"
+                android:layout_weight="10"
+                android:numeric="integer"
+                android:text="0"
+                android:gravity="right" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TAG"
+                android:id="@+id/position_tgl"
+                android:layout_weight="0.1" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="決定"
+                android:id="@+id/tag_btn"
+                android:layout_weight="0.1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:scaleType="fitStart"
+                android:id="@+id/pd_icon_debug"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/logo"
+                android:background="@null" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

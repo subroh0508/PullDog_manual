@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>ランドマーク</name>
+		<Placemark>
+			<name>バス停1</name>
+			<styleUrl>#icon-503-DB4436-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>139.3523589,35.6449232,0.0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>北野駅南口階段下_l</name>
+			<styleUrl>#icon-503-DB4436-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>139.3527056,35.6450567,0.0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>バス停2</name>
+			<styleUrl>#icon-503-DB4436-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>139.3528578,35.6449079,0.0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>エレベーター_l</name>
+			<styleUrl>#icon-503-DB4436-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>139.3527954,35.6449667,0.0</coordinates>
+			</Point>
+		</Placemark>
+		<Style id='icon-503-DB4436-nodesc-normal'>
+			<IconStyle>
+				<color>ff3644DB</color>
+				<scale>1.1</scale>
+				<Icon>
+					<href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+				</Icon>
+				<hotSpot x='16' y='31' xunits='pixels' yunits='insetPixels'>
+				</hotSpot>
+			</IconStyle>
+			<LabelStyle>
+				<scale>0.0</scale>
+			</LabelStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id='icon-503-DB4436-nodesc-highlight'>
+			<IconStyle>
+				<color>ff3644DB</color>
+				<scale>1.1</scale>
+				<Icon>
+					<href>http://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+				</Icon>
+				<hotSpot x='16' y='31' xunits='pixels' yunits='insetPixels'>
+				</hotSpot>
+			</IconStyle>
+			<LabelStyle>
+				<scale>1.1</scale>
+			</LabelStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<StyleMap id='icon-503-DB4436-nodesc'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#icon-503-DB4436-nodesc-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#icon-503-DB4436-nodesc-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>

@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>SafeArea</name>
+		<Placemark>
+			<name>SafeArea</name>
+			<styleUrl>#poly-B7DBAB-1-76-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<tessellate>1</tessellate>
+						<coordinates>139.3523542,35.6449161,0.0 139.3524675,35.64508119999999,0.0 139.352442,35.6451346,0.0 139.3523153,35.644933,0.0 139.3523542,35.6449161,0.0</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+		</Placemark>
+		<Placemark>
+			<name>SafeArea</name>
+			<styleUrl>#poly-B7DBAB-1-76-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<tessellate>1</tessellate>
+						<coordinates>139.3525305,35.6451618,0.0 139.352556,35.6450828,0.0 139.3525748,35.6450479,0.0 139.3526197,35.6450103,0.0 139.3529161,35.644873,0.0 139.3529503,35.6449215,0.0 139.3528242,35.644982,0.0 139.3528175,35.6449727,0.0 139.3528001,35.6449809,0.0 139.3527874,35.6449608,0.0 139.3527552,35.64497440000001,0.0 139.3527639,35.6449907,0.0 139.3527156,35.6450098,0.0 139.3527102,35.6450218,0.0 139.3526901,35.6450316,0.0 139.3527243,35.6450785,0.0 139.3525305,35.6451618,0.0</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+		</Placemark>
+		<Placemark>
+			<name>SafeArea</name>
+			<styleUrl>#poly-B7DBAB-1-76-nodesc</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<tessellate>1</tessellate>
+						<coordinates>139.3524387,35.645125300000004,0.0 139.3524595,35.645079,0.0 139.3525567,35.6450959,0.0 139.3525379,35.6451547,0.0 139.3524474,35.6451411,0.0 139.3524387,35.645125300000004,0.0</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+		</Placemark>
+		<Style id='poly-B7DBAB-1-76-nodesc-normal'>
+			<LineStyle>
+				<color>ffABDBB7</color>
+				<width>1</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>4CABDBB7</color>
+				<fill>1</fill>
+				<outline>1</outline>
+			</PolyStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id='poly-B7DBAB-1-76-nodesc-highlight'>
+			<LineStyle>
+				<color>ffABDBB7</color>
+				<width>2.0</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>4CABDBB7</color>
+				<fill>1</fill>
+				<outline>1</outline>
+			</PolyStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<StyleMap id='poly-B7DBAB-1-76-nodesc'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#poly-B7DBAB-1-76-nodesc-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#poly-B7DBAB-1-76-nodesc-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>

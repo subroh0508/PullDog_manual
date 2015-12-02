@@ -1,0 +1,174 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".rootMake"
+    android:id="@+id/LinearLayout"
+    android:orientation="vertical"
+    android:background="#c9ffe984">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:layout_marginBottom="5dp">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/kenjosya_map"
+            tools:context=".RouteMake"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_marginTop="0dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="left|bottom">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ttoal Distance"
+                android:id="@+id/total_distance"
+                android:textSize="20dp"
+                android:layout_marginBottom="30dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="650dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:id="@+id/linearlayout"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="top"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="健常者ルート作成モード"
+                android:textSize="30dp"
+                android:id="@+id/title_text"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp">
+
+            </TextView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1.5">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.beardedhen.androidbootstrap.BootstrapEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="left"
+                    android:hint=" ID 例:12345,99999"
+                    bootstrap:be_roundedCorners="true"
+                    bootstrap:be_state="success"
+                    android:id="@+id/id"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:inputType="number|text"
+                    android:textColorHint="#55000000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.beardedhen.androidbootstrap.BootstrapEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="left"
+                    android:hint=" ルート名 例:駅の南口から銀行まで"
+                    bootstrap:be_roundedCorners="true"
+                    bootstrap:be_state="success"
+                    android:id="@+id/rootName"
+                    android:inputType="text"
+                    android:textColorHint="#55000000" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="アップロード"
+                    bootstrap:bb_icon_right="fa-upload"
+                    bootstrap:bb_type="success"
+                    bootstrap:bb_roundedCorners="true"
+                    bootstrap:bb_size="small"
+                    android:id="@+id/end"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="2dp">
+
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="戻る"
+                    bootstrap:bb_type="success"
+                    bootstrap:bb_icon_right="fa-undo"
+                    bootstrap:bb_roundedCorners="true"
+                    bootstrap:bb_size="small"
+                    android:id="@+id/start"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="0dp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

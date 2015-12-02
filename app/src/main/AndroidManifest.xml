@@ -43,27 +43,6 @@
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                        android:resource="@xml/device_filter" />
         </activity>
-        <activity
-            android:name=".TwitterOAuthActivity"
-            android:launchMode="singleTask" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="twitter"
-                    android:scheme="gabu" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".TweetList"></activity>
-        <activity
-            android:name=".TweetActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".RouteMake"/>
-        <activity android:name=".RouteMakeManual"/>
-        <activity android:name=".SearchHealthlyPeopleRoute"/>
-        <activity android:name=".SearchHealthlyPeopleRoutePreview"/>
     </application>
 
 </manifest>

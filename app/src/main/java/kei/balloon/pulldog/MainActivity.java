@@ -246,6 +246,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 				ftDevice.purge((byte) (D2xxManager.FT_PURGE_TX | D2xxManager.FT_PURGE_RX));
 				ftDevice.restartInTask();
 				new Thread(mLoop).start();
+				Log.d("TAG", "スレッド起動");
 			}
 		}
 	}
@@ -257,6 +258,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 			int readSize, i = 0;
 
 			mThreadIsStopped = false;
+
 			while (true) {
 				if (mThreadIsStopped) {
 					break;
@@ -304,15 +306,15 @@ public class MainActivity extends FragmentActivity implements Runnable {
 													//srcText.setTextColor(0xFFFFFFFF);
 												}
 
-												if (navi.getPositioningMode() == Navi.GPS) {
+												//if (navi.getPositioningMode() == Navi.GPS) {
 													//本番はこっち
 													point[0] = mNowLocation.getPointLat();
 													point[1] = mNowLocation.getPointLng();
 
-													navi.setCurrentLocation(point[0], point[1]);
+													//navi.setCurrentLocation(point[0], point[1]);
 
 													updateMap(point[0], point[1]);
-												} else {
+												/*} else {
 													//RFID測位＋GPS補正
 													if (navi.getReferenceUpdateFlag()) {
 														navi.setReferencePoint(mNowLocation.getPointLat(), mNowLocation.getPointLng());
@@ -326,7 +328,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 														point[1] = nowLocation.longitude + lngCorrection;
 														updateMap(nowLocation.latitude + latCorrection, nowLocation.longitude + lngCorrection);
 													}
-												}
+												}*/
 
 
 												latlngText.setText("(" + point[0] + "," + point[1] + ")");
@@ -334,7 +336,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 												latlngText.setText("NotAvailable");
 											}
 										} catch (Exception e) {
-
+											Log.d("TAG", "Something");
 										}
 									}
 								});
@@ -536,7 +538,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 				Log.d("TAG", "IteratorSize:" + deviceList.values().size());
 				while (deviceIterator.hasNext()) {
 					UsbDevice dvc = deviceIterator.next();
-					Log.d("TAG", "VenderID:" + dvc.getProductId());
+					Log.d("TAG", "VenderID:" + dvc.getVendorId());
 
 					if (dvc.getVendorId() == 1240) {
 						//マイコン
@@ -595,7 +597,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 
 							usbReady = true;
 
-							if (gpsReady && usbReady && !isSpeakedInit) {
+							if (gpsReady && usbReady) {
 								Toast.makeText(ma, "プルドッグは正常に起動しました", Toast.LENGTH_LONG).show();
 							}
 
@@ -607,26 +609,26 @@ public class MainActivity extends FragmentActivity implements Runnable {
 							rfidTag[9] = buffer[9];
 
 							//RFID測位部
-							if (navi.getPositioningMode() == Navi.RFID) {
+							//if (navi.getPositioningMode() == Navi.RFID) {
 								tagNumberText.setText(Integer.toString((((int) rfidTag[6]) << 8) + (int) rfidTag[7]));  //todo デバッグ時は消す
 
 								try {
 									int tagId = Integer.parseInt(tagNumberText.getText().toString());
 
-									if ((rfidTag[4] != 0 || (rfidTag[5] == 1 || rfidTag[5] == 2) || rfidTag[8] != 0 || rfidTag[9] != 0) && navi.isExist(tagId) && !isVisited && pastId != tagId) {
+									/*if ((rfidTag[4] != 0 || (rfidTag[5] == 1 || rfidTag[5] == 2) || rfidTag[8] != 0 || rfidTag[9] != 0) && navi.isExist(tagId) && !isVisited && pastId != tagId) {
 										int status = navi.setCurrentLocation(tagId);
 										navi.updateReferencePoint();
-									}
+									}*/
 
-									point[0] = navi.getLatLng().latitude;
-									point[1] = navi.getLatLng().longitude;
+									//point[0] = navi.getLatLng().latitude;
+									//point[1] = navi.getLatLng().longitude;
 									updateMap(point[0], point[1]);
 
 								} catch (Exception e) {
 									e.printStackTrace();
 									Log.e("ERROR", e.getMessage());
 								}
-							}
+							//}
 						}
 					});
 					try {

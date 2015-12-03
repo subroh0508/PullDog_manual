@@ -1,9 +1,9 @@
 package kei.balloon.pulldog;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +26,8 @@ public class InformationFragment extends Fragment{
 		sateliteCount = (TextView)rootView.findViewById(R.id.satelite_count);
 
 		Bundle infoBundle = new Bundle();
-		if(qzssInfo != null) qzssInfo = (QZSS)infoBundle.getSerializable("QZSS");
-		if(infoHandler != null) infoHandler = new Handler();
+		if(qzssInfo == null) qzssInfo = (QZSS)infoBundle.getSerializable("QZSS");
+		if(infoHandler == null) infoHandler = new Handler();
 
 		if(threadIsStopped){
 			new Thread(infoLoop).start();
@@ -37,16 +37,34 @@ public class InformationFragment extends Fragment{
 		return rootView;
 	}
 
+	@Override
+	public void onPause(){
+		super.onPause();
+
+		threadIsStopped = true;
+	}
+
 	private final Runnable infoLoop = new Runnable() {
 		@Override
 		public void run() {
-			infoHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					sateliteCount.setText("visible:" + qzssInfo.getVisibleCount()
-							+ "  useful:" + qzssInfo.getUsefulCount());
-				}
-			});
+			while (!threadIsStopped) {
+				infoHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						int visible = 0;
+						int useful = 0;
+
+						if (qzssInfo != null) {
+							visible = qzssInfo.getVisibleCount();
+							useful = qzssInfo.getUsefulCount();
+						}
+
+						sateliteCount.setText("visible:" + visible + "  useful:" + useful);
+					}
+				});
+
+				Log.d("info", "Loop");
+			}
 
 		}
 	};

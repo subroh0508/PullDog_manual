@@ -15,8 +15,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,11 +25,6 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -121,14 +114,14 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		setUpMapIfNeeded();
+		setContentView(R.layout.tab_activity);
+		//setUpMapIfNeeded();
 
 		ma = this;
 
-		RFIDOrQZSS = (TextView) findViewById(R.id.QZSS_RFID);
+		/*RFIDOrQZSS = (TextView) findViewById(R.id.QZSS_RFID);
 		tagNumberText = (TextView) findViewById(R.id.tag_number);
-		latlngText = (TextView) findViewById(R.id.latlang);
+		latlngText = (TextView) findViewById(R.id.latlang);*/
 
 		//みちびき FTDIのインスタンスをとってくる
 		mNowLocation = new NowLocation();
@@ -155,7 +148,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 		TabHost.TabSpec mapTab = tabHost.newTabSpec("googleMap").setIndicator("Map");
 		Bundle mapBundle = new Bundle();
 		mapBundle.putSerializable("NowLocation", mNowLocation);
-		tabHost.addTab(mapTab, MapFragment.class, null);
+		tabHost.addTab(mapTab, GoogleMapFragment.class, null);
 	}
 
 
@@ -163,7 +156,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	protected void onResume() {
 		super.onResume();
 
-		if (mMap == null) {
+		/*if (mMap == null) {
 			// MapFragment から GoogleMap を取得する
 			mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
 					.getMap();
@@ -186,7 +179,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 				ui.setZoomGesturesEnabled(true);            // ズームジェスチャー(ピンチイン・アウト)の有効化
 				ui.setAllGesturesEnabled(true);             // すべてのジェスチャーの有効化
 			}
-		}
+		}*/
 		Intent nowIntent = getIntent();
 		String action = nowIntent.getAction();
 		UsbDevice device = (UsbDevice) nowIntent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
@@ -324,12 +317,12 @@ public class MainActivity extends FragmentActivity implements Runnable {
 
 												//if (navi.getPositioningMode() == Navi.GPS) {
 													//本番はこっち
-													point[0] = mNowLocation.getPointLat();
-													point[1] = mNowLocation.getPointLng();
+													//point[0] = mNowLocation.getPointLat();
+													//point[1] = mNowLocation.getPointLng();
 
 													//navi.setCurrentLocation(point[0], point[1]);
 
-													updateMap(point[0], point[1]);
+													//updateMap(point[0], point[1]);
 												/*} else {
 													//RFID測位＋GPS補正
 													if (navi.getReferenceUpdateFlag()) {
@@ -347,9 +340,9 @@ public class MainActivity extends FragmentActivity implements Runnable {
 												}*/
 
 
-												latlngText.setText("(" + point[0] + "," + point[1] + ")");
+												//latlngText.setText("(" + point[0] + "," + point[1] + ")");
 											} else {
-												latlngText.setText("NotAvailable");
+												//latlngText.setText("NotAvailable");
 											}
 										} catch (Exception e) {
 											Log.d("TAG", "Something");
@@ -670,7 +663,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	/*****
 	 * Google Mapセットアップ
 	 *****/
-	private void setUpMapIfNeeded() {
+	/*private void setUpMapIfNeeded() {
 		// Do a null check to confirm that we have not already instantiated the map.
 		if (mMap == null) {
 			// Try to obtain the map from the SupportMapFragment.
@@ -681,7 +674,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 				updateMap(point[0], point[1]);
 			}
 		}
-	}
+	}*/
 
 	/*****
 	 * GoogleMap マーカー更新

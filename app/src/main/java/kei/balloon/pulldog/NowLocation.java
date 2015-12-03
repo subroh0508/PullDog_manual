@@ -1,11 +1,12 @@
 package kei.balloon.pulldog;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * Created by root on 15/09/04.
  */
-public class NowLocation {
+public class NowLocation implements Serializable{
     public boolean SURVEY_EN, CORRECTION_ON;
 
     private LatLngHeight mPoint;

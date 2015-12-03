@@ -13,9 +13,11 @@ import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -141,6 +143,19 @@ public class MainActivity extends FragmentActivity implements Runnable {
 		// USBホストAPIインスタンス生成
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+
+		FragmentTabHost tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+		tabHost.setup(this, getSupportFragmentManager(), R.id.content);
+
+		TabHost.TabSpec infoTab = tabHost.newTabSpec("Information").setIndicator("Info");
+		Bundle infoBundle = new Bundle();
+		infoBundle.putSerializable("QZSS", mQZSS);
+		tabHost.addTab(infoTab, InformationFragment.class, infoBundle);
+
+		TabHost.TabSpec mapTab = tabHost.newTabSpec("googleMap").setIndicator("Map");
+		Bundle mapBundle = new Bundle();
+		mapBundle.putSerializable("NowLocation", mNowLocation);
+		tabHost.addTab(mapTab, MapFragment.class, null);
 	}
 
 
@@ -188,9 +203,10 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	/*****
 	 * アプリ終了時クローズ処理
 	 *****/
+	@Override
 	public void onPause() {
+		super.onPause();
 		usbThreadFlag = false;
-
 	}
 
 	@Override

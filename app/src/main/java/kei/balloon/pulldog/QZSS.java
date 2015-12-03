@@ -1,11 +1,12 @@
 package kei.balloon.pulldog;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by root on 15/09/04.
  */
-public class QZSS extends GNSS {
+public class QZSS extends GNSS implements Serializable{
     public boolean QZSS_ON, L1SAIF_ON;
 
     private final static int QZSS_NUM[] = {193}, L1SAIF_NUM[] = {55};

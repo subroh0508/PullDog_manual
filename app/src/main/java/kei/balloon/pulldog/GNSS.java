@@ -1,11 +1,12 @@
 package kei.balloon.pulldog;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by root on 15/09/04.
  */
-public class GNSS {
+public class GNSS implements Serializable{
     public boolean GPS_ON, GLONASS_ON;
 
     private ArrayList<Integer> mVisibleGNSS;

@@ -19,6 +19,7 @@ public class Qzss extends Gnss implements Serializable{
     private int mL1SAIFSNRate;
 
     private int mMessage;
+    private String nmeaLog = "No Log";
 
     public Qzss() {
         super();
@@ -80,6 +81,8 @@ public class Qzss extends Gnss implements Serializable{
         }
     }
 
+    public void setLog(String nmea) { nmeaLog = new String(nmea); }
+
     public void checkL1SAIF() {
         L1SAIF_ON = false;
 
@@ -104,4 +107,6 @@ public class Qzss extends Gnss implements Serializable{
     public int getL1SAIFSNRate() { return mL1SAIFSNRate; }
 
     public SatelitePotision searchQZSSPotision(int id) { return mQZSSPotision.get(mVisibleQZSS.indexOf(id)); }
+
+    public String getLog() { return nmeaLog; }
 }

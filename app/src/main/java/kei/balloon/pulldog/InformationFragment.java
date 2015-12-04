@@ -12,9 +12,12 @@ import android.widget.TextView;
  * Created by subroh0508 on 15/12/03.
  */
 public class InformationFragment extends Fragment{
+	private Bundle infoBundle = null;
 	private Qzss qzssInfo = null;
 	private Handler infoHandler = null;
+
 	private TextView sateliteCount;
+	private TextView gnssLog;
 	private boolean threadIsStopped = true;
 
 	@Override
@@ -23,10 +26,11 @@ public class InformationFragment extends Fragment{
 		View rootView = inflater.inflate(R.layout.info_fragment, container, false);
 
 		sateliteCount = (TextView)rootView.findViewById(R.id.satelite_count);
+		gnssLog = (TextView)rootView.findViewById(R.id.gnss_log_view);
 
-		Bundle infoBundle = new Bundle();
-		if(qzssInfo == null) qzssInfo = (Qzss)infoBundle.getSerializable("QZSS");
 		if(infoHandler == null) infoHandler = new Handler();
+		if(infoBundle == null) infoBundle = new Bundle();
+		qzssInfo = (Qzss)infoBundle.getSerializable("QZSS");
 
 		if(threadIsStopped){
 			new Thread(infoLoop).start();
@@ -47,6 +51,8 @@ public class InformationFragment extends Fragment{
 		@Override
 		public void run() {
 			while (!threadIsStopped) {
+				qzssInfo = (Qzss)infoBundle.getSerializable("QZSS");
+
 				infoHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -56,6 +62,8 @@ public class InformationFragment extends Fragment{
 						if (qzssInfo != null) {
 							visible = qzssInfo.getVisibleCount();
 							useful = qzssInfo.getUsefulCount();
+
+							gnssLog.append(qzssInfo.getLog() + "\n");
 						}
 
 						sateliteCount.setText("visible:" + visible + "  useful:" + useful);

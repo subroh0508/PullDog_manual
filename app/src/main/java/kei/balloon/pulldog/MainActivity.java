@@ -10,10 +10,12 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
@@ -25,6 +27,7 @@ import java.util.Iterator;
 public class MainActivity extends FragmentActivity implements Runnable {
 
 	private final static String FILE_PATH = "ExperimentForKitano/TagList.txt";
+	private MainActivity activity;
 
 	// USB1関係変数定義
 	private UsbManager mUsbManager;
@@ -80,11 +83,18 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	//RFID通信テスト用変数
 	private byte[] RFIDTag = new byte[100];
 
+	private Bundle infoBundle, mapBundle;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tab_activity);
 		//setUpMapIfNeeded();
+
+		activity = this;
+
+		//TagList読み込み
+		tagList = new RfidManager(this, FILE_PATH);
 
 		//みちびき FTDIのインスタンスをとってくる
 		mNowLocation = new NowLocation(tagList);
@@ -100,19 +110,16 @@ public class MainActivity extends FragmentActivity implements Runnable {
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
-		//TagList読み込み
-		tagList = new RfidManager(this, FILE_PATH);
-
 		FragmentTabHost tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
 		tabHost.setup(this, getSupportFragmentManager(), R.id.content);
 
 		TabHost.TabSpec infoTab = tabHost.newTabSpec("Information").setIndicator("Info");
-		Bundle infoBundle = new Bundle();
+		infoBundle = new Bundle();
 		infoBundle.putSerializable("QZSS", mQZSS);
 		tabHost.addTab(infoTab, InformationFragment.class, infoBundle);
 
 		TabHost.TabSpec mapTab = tabHost.newTabSpec("googleMap").setIndicator("Map");
-		Bundle mapBundle = new Bundle();
+		mapBundle = new Bundle();
 		mapBundle.putSerializable("NowLocation", mNowLocation);
 		tabHost.addTab(mapTab, GoogleMapFragment.class, mapBundle);
 	}
@@ -212,7 +219,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 			mThreadIsStopped = false;
 
 			if (RFIDReady)
-				Log.d("SUCCESS", "プルドッグは正常に起動しました");
+				Log.d("main", "プルドッグは正常に起動しました");
 
 			while (true) {
 				if (mThreadIsStopped) break;
@@ -235,6 +242,8 @@ public class MainActivity extends FragmentActivity implements Runnable {
 								rNMEA = data.split(",", -1);
 
 								arrangeData(rNMEA);
+								mQZSS.setLog(data);
+								Log.d("Main", mQZSS.getLog());
 
 								i = 0;
 								mDataIsRead = false;
@@ -250,6 +259,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 					}
 				}
 
+				//Log.d("Main", "GNSS Loop");
 			}
 		}
 	};
@@ -481,8 +491,9 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	 * USBデータ状態受信スレッド
 	 *****/
 	public void run() {
+
 		if (GPSReady)
-			Log.d("SUCCESS", "プルドッグは正常に起動しました");
+			Log.d("main", "プルドッグは正常に起動しました");
 
 		while (true) {
 			if (flag == 1) {
@@ -493,6 +504,8 @@ public class MainActivity extends FragmentActivity implements Runnable {
 					for(int i = 4; i < 10; i++) RFIDTag[i] = buffer[i];
 
 					tagId = (((int) RFIDTag[6]) << 8) + (int) RFIDTag[7];
+
+					Log.d("main", "tagID:"+tagId);
 
 					mNowLocation.setTagId(tagId);
 
@@ -509,6 +522,8 @@ public class MainActivity extends FragmentActivity implements Runnable {
 					Log.d("TAG", "デバイスが切り離されました");
 				}
 			}
+
+			//Log.d("Main", "RFID Loop");
 		}
 	}
 }

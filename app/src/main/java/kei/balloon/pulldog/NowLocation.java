@@ -11,11 +11,17 @@ import java.util.List;
  * Created by root on 15/09/04.
  */
 public class NowLocation implements Serializable{
-    private final static boolean RFID_SURVEY = true, GNSS_SURVEY = false;
+    private final static short RFID_SURVEY = 0, GNSS_SURVEY = 1, BOTH_SURVEY = 2;
+
+    private final static double LATITUDE_TO_METER = 111262.393;
+    private final static double LONGITUDE_TO_METER = 91158.432; //東京での係数． 任意地点の近似だったら緯度の係数にcos掛ける. 正確には楕円モデルが必要．
+    public final static double METER_OF_LATITUDE = 1.0 / LATITUDE_TO_METER;
+    public final static double METER_OF_LONGITUDE = 1.0 / LONGITUDE_TO_METER;
+    public final static double BLOCK_SIZE = 0.30;
 
     public boolean SURVEY_EN, CORRECTION_ON;
 
-    private LatLng nowPoint, gnssPoint, rfidPoint;
+    private LatLng nowPoint, gnssPoint, pastGnssPoint, rfidPoint;
     private double nowVelocity;
 
     private int tagId;
@@ -23,7 +29,7 @@ public class NowLocation implements Serializable{
     private int visibleSatelite, usefulSatelite;
 
     private RfidManager RfidLatLngList;
-    private Rfid nowRfid;
+    private Rfid nowRfid = null;
 
     public NowLocation(RfidManager manager) {
         SURVEY_EN = false;
@@ -31,7 +37,10 @@ public class NowLocation implements Serializable{
 
         nowVelocity = 0.0;
 
-        nowPoint = new LatLng(0.0, 0.0);
+        rfidPoint = new LatLng(0.0, 0.0);
+        gnssPoint = new LatLng(90.0, 180.0);
+        nowPoint = gnssPoint;
+        pastGnssPoint = gnssPoint;
 
         tagId = -1;
 
@@ -42,6 +51,8 @@ public class NowLocation implements Serializable{
     }
 
     public void setGnssPoint(String[] rNMEA) {
+        pastGnssPoint = gnssPoint;
+
         if(rNMEA[6].charAt(0) == 'N' && rNMEA[6].charAt(1) == 'N')
             SURVEY_EN = false;
         else
@@ -70,6 +81,8 @@ public class NowLocation implements Serializable{
     }
 
     public void setGnssPoint(String indicator, double lat, double lng, double height, char NS, char EW) {
+        pastGnssPoint = gnssPoint;
+
         if(indicator.charAt(0) == 'N' && indicator.charAt(1) == 'N')
             SURVEY_EN = false;
         else
@@ -111,7 +124,27 @@ public class NowLocation implements Serializable{
 
     public double getNowPointLng() { return nowPoint.longitude; }
 
-    public LatLng getNowPoint() { return nowPoint; }
+    public LatLng getNowPoint() {
+        if(tagId != -1) {
+            double latDiff = gnssPoint.latitude-pastGnssPoint.latitude;
+            double lngDiff = gnssPoint.longitude-pastGnssPoint.longitude;
+
+            nowPoint = new LatLng(rfidPoint.latitude+latDiff, rfidPoint.longitude+lngDiff);
+        } else {
+            nowPoint = gnssPoint;
+        }
+
+        switch(surveyModeSelect()){
+            case RFID_SURVEY:
+                return rfidPoint;
+            case BOTH_SURVEY:
+                return nowPoint;
+            case GNSS_SURVEY:
+                return gnssPoint;
+            default:
+                return nowPoint;
+        }
+    }
 
     public char getDirectionNS() {
         if(Math.signum(nowPoint.latitude) == -1.0) {
@@ -170,27 +203,38 @@ public class NowLocation implements Serializable{
         
         nowRfid = RfidLatLngList.getRfidById(tag);
 
-        if(!nowRfid.isInDoor())
+        if(nowRfid != null && !nowRfid.isInDoor())
             rfidPoint = new LatLng(nowRfid.getLat(), nowRfid.getLng());
         
     }
 
     public boolean isInDoor(){
-        if(nowRfid.isInDoor())
+        if(nowRfid != null && nowRfid.isInDoor())
             return true;
         else
             return false;
     }
 
-    private boolean surveyModeSelect(){
+    private short surveyModeSelect(){
+        double diffRfidAndGnss;
 
+        if(tagId != -1)
+            diffRfidAndGnss = getDistance(rfidPoint, nowPoint);
+        else
+            diffRfidAndGnss = 10000000.0;
+
+        if(diffRfidAndGnss < BLOCK_SIZE*3 || isInDoor())
+            return RFID_SURVEY;
+        else if(diffRfidAndGnss < BLOCK_SIZE*20)
+            return BOTH_SURVEY;
+        else
+            return GNSS_SURVEY;
     }
 
-    private double getDirection(LatLng p1, LatLng p2){
-        BigDecimal latDiff = new BigDecimal(p1.latitude).subtract(new BigDecimal(p2.latitude));
-        BigDecimal lngDiff = new BigDecimal(p1.longitude).subtract(new BigDecimal(p2.longitude));
+    private double getDistance(LatLng p1, LatLng p2){
+        double latDiff = (p1.latitude-p2.latitude)*LATITUDE_TO_METER;
+        double lngDiff = (p1.longitude-p2.longitude)*LONGITUDE_TO_METER;
 
-
-
+        return Math.sqrt(latDiff*latDiff+lngDiff*lngDiff);
     }
 }

@@ -33,6 +33,7 @@ public class GoogleMapFragment extends Fragment {
 	private GoogleMap googleMap;
 	public Marker nowMarker = null;
 
+	private Bundle mapBundle = null;
 	private Handler mapHandler = null;
 	private TextView latlngText;
 	private boolean threadIsStopped = true;
@@ -44,9 +45,10 @@ public class GoogleMapFragment extends Fragment {
 
 		latlngText = (TextView)rootView.findViewById(R.id.latlang);
 
-		Bundle infoBundle = new Bundle();
-		if(nowLocation == null) nowLocation = (NowLocation)infoBundle.getSerializable("NowLocation");
 		if(mapHandler == null) mapHandler = new Handler();
+
+		if(mapBundle == null) mapBundle = new Bundle();
+		nowLocation = (NowLocation)mapBundle.getSerializable("NowLocation");
 
 		if(threadIsStopped) {
 			new Thread(mapLoop).start();
@@ -83,15 +85,17 @@ public class GoogleMapFragment extends Fragment {
 		@Override
 		public void run() {
 			while(!threadIsStopped) {
+				nowLocation = (NowLocation)mapBundle.getSerializable("NowLocation");
+
 				mapHandler.post(new Runnable() {
 					@Override
 					public void run() {
 						if (nowLocation != null) {
-							double lat = nowLocation.getNowPointLat();
-							double lng = nowLocation.getNowPointLng();
+							LatLng surveyPoint = nowLocation.getNowPoint();
 
-							updateMap(lat, lng);
-							latlngText.setText("(" + lat + "," + lng + ")");
+							updateMap(surveyPoint.latitude, surveyPoint.longitude);
+							latlngText.setText("(" + surveyPoint.latitude
+									+ "," + surveyPoint.longitude + ")");
 						}
 					}
 				});

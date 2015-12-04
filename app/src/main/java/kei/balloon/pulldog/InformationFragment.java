@@ -3,7 +3,6 @@ package kei.balloon.pulldog;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.TextView;
  * Created by subroh0508 on 15/12/03.
  */
 public class InformationFragment extends Fragment{
-	private QZSS qzssInfo = null;
+	private Qzss qzssInfo = null;
 	private Handler infoHandler = null;
 	private TextView sateliteCount;
 	private boolean threadIsStopped = true;
@@ -26,7 +25,7 @@ public class InformationFragment extends Fragment{
 		sateliteCount = (TextView)rootView.findViewById(R.id.satelite_count);
 
 		Bundle infoBundle = new Bundle();
-		if(qzssInfo == null) qzssInfo = (QZSS)infoBundle.getSerializable("QZSS");
+		if(qzssInfo == null) qzssInfo = (Qzss)infoBundle.getSerializable("QZSS");
 		if(infoHandler == null) infoHandler = new Handler();
 
 		if(threadIsStopped){
@@ -63,7 +62,13 @@ public class InformationFragment extends Fragment{
 					}
 				});
 
-				Log.d("info", "Loop");
+				try {
+					Thread.sleep(500);
+				} catch(InterruptedException e) {
+					e.getStackTrace();
+				}
+
+				//Log.d("info", "Loop");
 			}
 
 		}

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by root on 15/09/04.
  */
-public class GNSS implements Serializable{
+public class Gnss implements Serializable{
     public boolean GPS_ON, GLONASS_ON;
 
     private ArrayList<Integer> mVisibleGNSS;
@@ -18,7 +18,7 @@ public class GNSS implements Serializable{
 
     private int mMessage;
 
-    public GNSS() {
+    public Gnss() {
         GPS_ON = false;
         GLONASS_ON = false;
 

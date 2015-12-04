@@ -3,7 +3,6 @@ package kei.balloon.pulldog;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
@@ -11,40 +10,21 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 
 public class MainActivity extends FragmentActivity implements Runnable {
 
-	public MainActivity ma;
-
-	//Google Map
-	private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-	public Marker mLocation = null;
+	private final static String FILE_PATH = "ExperimentForKitano/TagList.txt";
 
 	// USB1関係変数定義
 	private UsbManager mUsbManager;
@@ -65,9 +45,6 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	private static final byte COMMAND_SOL = 0x33;        // ソレノイド用コマンド
 	private static final byte COMMAND_STATUS = 0x40;    // マイコンの状態取得用コマンド
 
-	// USB受信ハンドラのインスタンス生成
-	private final Handler handler = new Handler();
-
 	//USB Thread
 	private Thread usbThread;
 	private boolean usbThreadFlag = true;
@@ -75,7 +52,6 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	// アプリ用変数
 	private byte flag;  //USB関連
 	private int result; //USB関連
-	private boolean cameraFocus = true;            //現在地をフォーカス   true:有効 false:無効
 
 	//みちびき(QZ1・FTDI)
 	private static D2xxManager ftD2xx = null;
@@ -88,28 +64,21 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	public String[] rNMEA;
 	public String data;
 	private NowLocation mNowLocation; //
-	private QZSS mQZSS;
-
+	private Qzss mQZSS;
 
 	public double[] point = {0.0, 0.0, 0.0};
 
 	boolean mThreadIsStopped = true;
-	Handler mHandler = new Handler();
 	boolean mDataIsRead = false;
 
 	//RFID
+	private RfidManager tagList;
 	private int tagId = -1;
-	private int pastId = -1;
 
-	boolean usbReady = false, gpsReady = false;
-	boolean isSpeakedInit = false;
+	boolean RFIDReady = false, GPSReady = false;
 
 	//RFID通信テスト用変数
-	private byte[] rfidTag = new byte[100];
-
-	private TextView RFIDOrQZSS;
-	private TextView tagNumberText;
-	private TextView latlngText;
+	private byte[] RFIDTag = new byte[100];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,15 +86,9 @@ public class MainActivity extends FragmentActivity implements Runnable {
 		setContentView(R.layout.tab_activity);
 		//setUpMapIfNeeded();
 
-		ma = this;
-
-		/*RFIDOrQZSS = (TextView) findViewById(R.id.QZSS_RFID);
-		tagNumberText = (TextView) findViewById(R.id.tag_number);
-		latlngText = (TextView) findViewById(R.id.latlang);*/
-
 		//みちびき FTDIのインスタンスをとってくる
-		mNowLocation = new NowLocation();
-		mQZSS = new QZSS();
+		mNowLocation = new NowLocation(tagList);
+		mQZSS = new Qzss();
 
 		try {
 			ftD2xx = D2xxManager.getInstance(this);
@@ -136,6 +99,9 @@ public class MainActivity extends FragmentActivity implements Runnable {
 		// USBホストAPIインスタンス生成
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+
+		//TagList読み込み
+		tagList = new RfidManager(this, FILE_PATH);
 
 		FragmentTabHost tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
 		tabHost.setup(this, getSupportFragmentManager(), R.id.content);
@@ -148,7 +114,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 		TabHost.TabSpec mapTab = tabHost.newTabSpec("googleMap").setIndicator("Map");
 		Bundle mapBundle = new Bundle();
 		mapBundle.putSerializable("NowLocation", mNowLocation);
-		tabHost.addTab(mapTab, GoogleMapFragment.class, null);
+		tabHost.addTab(mapTab, GoogleMapFragment.class, mapBundle);
 	}
 
 
@@ -156,30 +122,6 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	protected void onResume() {
 		super.onResume();
 
-		/*if (mMap == null) {
-			// MapFragment から GoogleMap を取得する
-			mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-					.getMap();
-			if (mMap != null) {
-				// マップの種類を設定する
-				mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-				// 現在地の取得
-				mMap.setMyLocationEnabled(true);
-
-				// UI の有効／無効設定を行う
-				UiSettings ui = mMap.getUiSettings();
-
-				ui.setCompassEnabled(true);                 // コンパスの有効化
-				ui.setMyLocationButtonEnabled(true);        // 現在位置に移動するボタンの有効化
-				ui.setRotateGesturesEnabled(true);          // 回転ジェスチャーの有効化
-				ui.setScrollGesturesEnabled(true);          // スクロールジェスチャーの有効化
-				ui.setTiltGesturesEnabled(true);            // Tlitジェスチャー(立体表示)の有効化
-				ui.setZoomControlsEnabled(true);            // ズームイン・アウトボタンの有効化
-				ui.setZoomGesturesEnabled(true);            // ズームジェスチャー(ピンチイン・アウト)の有効化
-				ui.setAllGesturesEnabled(true);             // すべてのジェスチャーの有効化
-			}
-		}*/
 		Intent nowIntent = getIntent();
 		String action = nowIntent.getAction();
 		UsbDevice device = (UsbDevice) nowIntent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
@@ -266,12 +208,14 @@ public class MainActivity extends FragmentActivity implements Runnable {
 		public void run() {
 			int readSize, i = 0;
 
+			GPSReady = true;
 			mThreadIsStopped = false;
 
+			if (RFIDReady)
+				Log.d("SUCCESS", "プルドッグは正常に起動しました");
+
 			while (true) {
-				if (mThreadIsStopped) {
-					break;
-				}
+				if (mThreadIsStopped) break;
 
 				synchronized (ftDevice) {
 					readSize = ftDevice.getQueueStatus();
@@ -291,64 +235,6 @@ public class MainActivity extends FragmentActivity implements Runnable {
 								rNMEA = data.split(",", -1);
 
 								arrangeData(rNMEA);
-
-								mHandler.post(new Runnable() {
-									@Override
-									public void run() {
-
-										gpsReady = true;
-
-										try {
-											if (mNowLocation.SURVEY_EN || mNowLocation.CORRECTION_ON) {
-												//通常測位または補正有測位
-
-												if (mQZSS.GPS_ON || mQZSS.GLONASS_ON) {
-													//srcText.setTextColor(0xFFFFFF00);
-													//GPS衛星orGLONASS衛星の電波が取得できている
-												} else if (mQZSS.QZSS_ON) {
-													//srcText.setTextColor(0xFFFF0000);
-													//みちびきの電波が取得できている
-												} else if (mQZSS.L1SAIF_ON) {
-													//srcText.setTextColor(0xFF0000FF);
-													//L1SAIF補強信号が受信できている
-												} else {
-													//srcText.setTextColor(0xFFFFFFFF);
-												}
-
-												//if (navi.getPositioningMode() == Navi.GPS) {
-													//本番はこっち
-													//point[0] = mNowLocation.getPointLat();
-													//point[1] = mNowLocation.getPointLng();
-
-													//navi.setCurrentLocation(point[0], point[1]);
-
-													//updateMap(point[0], point[1]);
-												/*} else {
-													//RFID測位＋GPS補正
-													if (navi.getReferenceUpdateFlag()) {
-														navi.setReferencePoint(mNowLocation.getPointLat(), mNowLocation.getPointLng());
-													}
-													if (!navi.isInDoor()) {
-														LatLng nowLocation = navi.getLatLng();
-														LatLng referenceLocation = navi.getReferencePoint();
-														double latCorrection = mNowLocation.getPointLat() - referenceLocation.latitude;
-														double lngCorrection = mNowLocation.getPointLng() - referenceLocation.longitude;
-														point[0] = nowLocation.latitude + latCorrection;
-														point[1] = nowLocation.longitude + lngCorrection;
-														updateMap(nowLocation.latitude + latCorrection, nowLocation.longitude + lngCorrection);
-													}
-												}*/
-
-
-												//latlngText.setText("(" + point[0] + "," + point[1] + ")");
-											} else {
-												//latlngText.setText("NotAvailable");
-											}
-										} catch (Exception e) {
-											Log.d("TAG", "Something");
-										}
-									}
-								});
 
 								i = 0;
 								mDataIsRead = false;
@@ -373,17 +259,17 @@ public class MainActivity extends FragmentActivity implements Runnable {
 			switch (rNMEA[0]) {
 				case "GPGNS":
 					mQZSS.setGPS(rNMEA);
-					mNowLocation.setPoint(rNMEA);
+					mNowLocation.setGnssPoint(rNMEA);
 
 					break;
 				case "GLGNS":
 					mQZSS.setGLONASS(rNMEA);
-					mNowLocation.setPoint(rNMEA);
+					mNowLocation.setGnssPoint(rNMEA);
 
 					break;
 				case "GNGNS":
 					mQZSS.setGNSS(rNMEA);
-					mNowLocation.setPoint(rNMEA);
+					mNowLocation.setGnssPoint(rNMEA);
 
 					break;
 				case "GPGSA":
@@ -425,9 +311,8 @@ public class MainActivity extends FragmentActivity implements Runnable {
 
 	/* ボーレート[bps]・データ長[bit]・ストップBit[bit]・バリティを設定 */
 	private void setConfig(int baud, byte dataBits, byte stopBits, byte parity, byte flowControl) {
-		if (!ftDevice.isOpen()) {
-			return;
-		}
+		if (!ftDevice.isOpen()) return;
+
 
 		ftDevice.setBitMode((byte) 0, D2xxManager.FT_BITMODE_RESET);
 		ftDevice.setBaudRate(baud);
@@ -596,50 +481,21 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	 * USBデータ状態受信スレッド
 	 *****/
 	public void run() {
+		if (GPSReady)
+			Log.d("SUCCESS", "プルドッグは正常に起動しました");
+
 		while (true) {
 			if (flag == 1) {
 				sendStatusCommand();                // 状態，計測要求コマンド送信
 				result = mConnection.bulkTransfer(mEndpointIn, buffer, 64, 200); //状態受信処理　常に64byte受信
-				if (result > 0) {                        // 正常受信なら受信データ処理実行
-					handler.post(new Runnable() {    // データ表示
-						public void run() {
+				if (result > 0) {
+					// 正常受信なら受信データ処理実行
+					for(int i = 4; i < 10; i++) RFIDTag[i] = buffer[i];
 
-							usbReady = true;
+					tagId = (((int) RFIDTag[6]) << 8) + (int) RFIDTag[7];
 
-							if (gpsReady && usbReady) {
-								Toast.makeText(ma, "プルドッグは正常に起動しました", Toast.LENGTH_LONG).show();
-							}
+					mNowLocation.setTagId(tagId);
 
-							rfidTag[4] = buffer[4];
-							rfidTag[5] = buffer[5];
-							rfidTag[6] = buffer[6];
-							rfidTag[7] = buffer[7];
-							rfidTag[8] = buffer[8];
-							rfidTag[9] = buffer[9];
-
-							//RFID測位部
-							//if (navi.getPositioningMode() == Navi.RFID) {
-								tagNumberText.setText(Integer.toString((((int) rfidTag[6]) << 8) + (int) rfidTag[7]));  //todo デバッグ時は消す
-
-								try {
-									int tagId = Integer.parseInt(tagNumberText.getText().toString());
-
-									/*if ((rfidTag[4] != 0 || (rfidTag[5] == 1 || rfidTag[5] == 2) || rfidTag[8] != 0 || rfidTag[9] != 0) && navi.isExist(tagId) && !isVisited && pastId != tagId) {
-										int status = navi.setCurrentLocation(tagId);
-										navi.updateReferencePoint();
-									}*/
-
-									//point[0] = navi.getLatLng().latitude;
-									//point[1] = navi.getLatLng().longitude;
-									updateMap(point[0], point[1]);
-
-								} catch (Exception e) {
-									e.printStackTrace();
-									Log.e("ERROR", e.getMessage());
-								}
-							//}
-						}
-					});
 					try {
 						usbThread.sleep(USB_SLEEP);            //インターバル
 					} catch (InterruptedException e) {
@@ -649,86 +505,10 @@ public class MainActivity extends FragmentActivity implements Runnable {
 				} else {
 					mConnection.close();
 					flag = 0;
-					handler.post(new Runnable() {    // メッセージ出力
-						public void run() {
-							Log.d("TAG", "デバイスが切り離されました");
-						}
-					});
+
+					Log.d("TAG", "デバイスが切り離されました");
 				}
 			}
 		}
-	}
-
-
-	/*****
-	 * Google Mapセットアップ
-	 *****/
-	/*private void setUpMapIfNeeded() {
-		// Do a null check to confirm that we have not already instantiated the map.
-		if (mMap == null) {
-			// Try to obtain the map from the SupportMapFragment.
-			mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-					.getMap();
-			// Check if we were successful in obtaining the map.
-			if (mMap != null) {
-				updateMap(point[0], point[1]);
-			}
-		}
-	}*/
-
-	/*****
-	 * GoogleMap マーカー更新
-	 *****/
-	public void updateMap(double lat, double lng) {
-		LatLng p = new LatLng(lat, lng);
-
-		if (mLocation != null) mLocation.remove();
-		mLocation = mMap.addMarker(new MarkerOptions().position(p).title("げんざいち"));
-
-		if (cameraFocus) {
-			CameraUpdate cu =
-					CameraUpdateFactory.newLatLngZoom(
-							new LatLng(lat, lng), 25f);
-			mMap.moveCamera(cu);
-			cameraFocus = false;
-            /*
-            CameraPosition cp = new CameraPosition.Builder()
-                    .target(p).zoom(20.0F)
-                    .bearing(0).tilt(25).build();
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
-        */
-		}
-	}
-
-	/*****
-	 * GoogleMap ポリゴン描画
-	 *****/
-	public void drawPolygon(ArrayList<LatLng> latlng) {
-		PolygonOptions rectOptions = new PolygonOptions();
-		for (LatLng ll : latlng) {
-			rectOptions.add(ll);
-		}
-		Polygon polygon_newsta = mMap.addPolygon(rectOptions);
-		//線の幅を指定（ピクセル単位）
-		polygon_newsta.setStrokeWidth(2);
-		//線の色を指定（ARGBフォーマット）
-		polygon_newsta.setStrokeColor(Color.CYAN);
-		//塗りつぶす場合、色を指定（ARGBフォーマット、半透明な青の場合）
-		polygon_newsta.setFillColor(0x557777ff);
-
-	}
-
-	/*****
-	 * GoogleMap ポリライン描画
-	 *****/
-	public void drawPolyline(List<LatLng> latlng) {
-		PolylineOptions options = new PolylineOptions();
-		for (LatLng ll : latlng) {
-			options.add(ll);
-		}
-		options.color(0xff2FAEFC);
-		options.width(20);
-		options.geodesic(true); // 測地線で表示する場合、地図上で２点間を結ぶ最短曲線
-		mMap.addPolyline(options);
 	}
 }

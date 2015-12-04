@@ -13,7 +13,7 @@ public class RfidManager {
     private List<Rfid> tagList;
     private MainActivity context;
 
-    public RfidManager(MainActivity ma,  String tagListName){
+    public RfidManager(MainActivity ma, String tagListName){
         context = ma;
         tagList = new ArrayList<Rfid>();
         importData(tagListName);

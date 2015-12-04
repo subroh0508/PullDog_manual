@@ -87,8 +87,8 @@ public class GoogleMapFragment extends Fragment {
 					@Override
 					public void run() {
 						if (nowLocation != null) {
-							double lat = nowLocation.getPointLat();
-							double lng = nowLocation.getPointLng();
+							double lat = nowLocation.getNowPointLat();
+							double lng = nowLocation.getNowPointLng();
 
 							updateMap(lat, lng);
 							latlngText.setText("(" + lat + "," + lng + ")");
@@ -96,7 +96,12 @@ public class GoogleMapFragment extends Fragment {
 					}
 				});
 
-				Log.d("map", "Loop");
+				try {
+					Thread.sleep(500);
+				} catch(InterruptedException e) {
+					e.getStackTrace();
+				}
+				//Log.d("map", "Loop");
 			}
 		}
 	};

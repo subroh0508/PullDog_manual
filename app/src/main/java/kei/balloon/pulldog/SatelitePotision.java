@@ -1,9 +1,11 @@
 package kei.balloon.pulldog;
 
+import java.io.Serializable;
+
 /**
  * Created by root on 15/09/04.
  */
-public class SatelitePotision {
+public class SatelitePotision implements Serializable{
     private double mElevation;
     private double mAzimuth;
 

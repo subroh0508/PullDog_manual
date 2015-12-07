@@ -2,10 +2,12 @@ package kei.balloon.pulldog;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+
 /**
  * Created by Kazuki on 2015/09/08.
  */
-public class Rfid {
+public class Rfid implements Serializable{
     private int id;
     private LatLng location;
     private boolean inDoor;

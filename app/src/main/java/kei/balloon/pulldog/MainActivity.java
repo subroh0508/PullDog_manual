@@ -20,14 +20,17 @@ import android.widget.Toast;
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 
 
-public class MainActivity extends FragmentActivity implements Runnable {
+public class MainActivity extends FragmentActivity implements Runnable, Serializable {
 
 	private final static String FILE_PATH = "ExperimentForKitano/TagList.txt";
 	private MainActivity activity;
+	private GoogleMapFragment mapFragment = new GoogleMapFragment();
+	private InformationFragment infoFragment = new InformationFragment();
 
 	// USB1関係変数定義
 	private UsbManager mUsbManager;
@@ -66,8 +69,8 @@ public class MainActivity extends FragmentActivity implements Runnable {
 
 	public String[] rNMEA;
 	public String data;
-	private NowLocation mNowLocation; //
-	private Qzss mQZSS;
+	public NowLocation mNowLocation; //
+	public Qzss mQZSS;
 
 	public double[] point = {0.0, 0.0, 0.0};
 
@@ -84,6 +87,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 	private byte[] RFIDTag = new byte[100];
 
 	private Bundle infoBundle, mapBundle;
+	private double testlat = 0.0, testlng = 0.0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +176,7 @@ public class MainActivity extends FragmentActivity implements Runnable {
 				setConfig(112500, (byte) 8, (byte) 1, (byte) 0, (byte) 0);
 				ftDevice.purge((byte) (D2xxManager.FT_PURGE_TX | D2xxManager.FT_PURGE_RX));
 				ftDevice.restartInTask();
-				new Thread(mLoop).start();
+				new Thread(receiveLoop).start();
 				Log.d("TAG", "スレッド起動");
 			}
 
@@ -203,14 +207,14 @@ public class MainActivity extends FragmentActivity implements Runnable {
 				setConfig(112500, (byte) 8, (byte) 1, (byte) 0, (byte) 0);
 				ftDevice.purge((byte) (D2xxManager.FT_PURGE_TX | D2xxManager.FT_PURGE_RX));
 				ftDevice.restartInTask();
-				new Thread(mLoop).start();
+				new Thread(receiveLoop).start();
 				Log.d("TAG", "スレッド起動");
 			}
 		}
 	}
 
 	/* データの逐次取得 */
-	private Runnable mLoop = new Runnable() {
+	private Runnable receiveLoop = new Runnable() {
 		@Override
 		public void run() {
 			int readSize, i = 0;
@@ -266,49 +270,28 @@ public class MainActivity extends FragmentActivity implements Runnable {
 
 	private void arrangeData(String[] rNMEA) {
 		if (rNMEA.length > 0) {
-			switch (rNMEA[0]) {
-				case "GPGNS":
-					mQZSS.setGPS(rNMEA);
-					mNowLocation.setGnssPoint(rNMEA);
-
-					break;
-				case "GLGNS":
-					mQZSS.setGLONASS(rNMEA);
-					mNowLocation.setGnssPoint(rNMEA);
-
-					break;
-				case "GNGNS":
-					mQZSS.setGNSS(rNMEA);
-					mNowLocation.setGnssPoint(rNMEA);
-
-					break;
-				case "GPGSA":
-					mQZSS.setUsefulGNSS(rNMEA);
-					mQZSS.checkQZSS();
-
-					break;
-				case "GNGSA":
-					mQZSS.setUsefulGNSS(rNMEA);
-					mQZSS.checkQZSS();
-
-					break;
-				case "GPGSV":
-					mQZSS.setVisibleGNSS(rNMEA);
-
-					break;
-				case "QZGSV":
-					mQZSS.setVisibleQZSS(rNMEA);
-					mQZSS.checkL1SAIF();
-
-					break;
-				case "GNVTG":
-					mNowLocation.setVelocity(rNMEA);
-
-					//tmp = new String(data);
-
-					break;
-				default:
-					break;
+			if(rNMEA[0].equals("GPGNS")) {
+				mQZSS.setGPS(rNMEA);
+				mNowLocation.setGnssPoint(rNMEA);
+			} else if(rNMEA[0].equals("GLGNS")) {
+				mQZSS.setGLONASS(rNMEA);
+				mNowLocation.setGnssPoint(rNMEA);
+			} else if(rNMEA[0].equals("GNGNS")) {
+				mQZSS.setGNSS(rNMEA);
+				mNowLocation.setGnssPoint(rNMEA);
+			} else if(rNMEA[0].equals("GPGSA")) {
+				mQZSS.setUsefulGNSS(rNMEA);
+				mQZSS.checkQZSS();
+			} else if(rNMEA[0].equals("GNGSA")) {
+				mQZSS.setUsefulGNSS(rNMEA);
+				mQZSS.checkQZSS();
+			} else if(rNMEA[0].equals("GPGSV")) {
+				mQZSS.setVisibleGNSS(rNMEA);
+			} else if(rNMEA[0].equals("QZGSV")) {
+				mQZSS.setVisibleQZSS(rNMEA);
+				mQZSS.checkL1SAIF();
+			} else if(rNMEA[0].equals("GNVTG")) {
+				mNowLocation.setVelocity(rNMEA);
 			}
 		}
 	}

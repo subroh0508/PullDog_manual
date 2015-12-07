@@ -15,6 +15,7 @@ public class InformationFragment extends Fragment{
 	private Bundle infoBundle = null;
 	private Qzss qzssInfo = null;
 	private Handler infoHandler = null;
+	private MainActivity activity;
 
 	private TextView sateliteCount;
 	private TextView gnssLog;
@@ -29,7 +30,7 @@ public class InformationFragment extends Fragment{
 		gnssLog = (TextView)rootView.findViewById(R.id.gnss_log_view);
 
 		if(infoHandler == null) infoHandler = new Handler();
-		if(infoBundle == null) infoBundle = new Bundle();
+		if(infoBundle == null) infoBundle = getArguments();
 		qzssInfo = (Qzss)infoBundle.getSerializable("QZSS");
 
 		if(threadIsStopped){
@@ -50,35 +51,32 @@ public class InformationFragment extends Fragment{
 	private final Runnable infoLoop = new Runnable() {
 		@Override
 		public void run() {
-			while (!threadIsStopped) {
-				qzssInfo = (Qzss)infoBundle.getSerializable("QZSS");
+			while(!threadIsStopped) {
+				if (qzssInfo != null) {
+					infoHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							int visible = 0;
+							int useful = 0;
 
-				infoHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						int visible = 0;
-						int useful = 0;
-
-						if (qzssInfo != null) {
 							visible = qzssInfo.getVisibleCount();
 							useful = qzssInfo.getUsefulCount();
 
 							gnssLog.append(qzssInfo.getLog() + "\n");
+
+							sateliteCount.setText("visible:" + visible + "  useful:" + useful);
 						}
+					});
 
-						sateliteCount.setText("visible:" + visible + "  useful:" + useful);
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.getStackTrace();
 					}
-				});
 
-				try {
-					Thread.sleep(500);
-				} catch(InterruptedException e) {
-					e.getStackTrace();
+					//Log.d("info", "Loop");
 				}
-
-				//Log.d("info", "Loop");
 			}
-
 		}
 	};
 }

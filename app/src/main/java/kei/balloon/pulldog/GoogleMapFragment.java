@@ -4,29 +4,28 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by subroh0508 on 15/12/03.
  */
 public class GoogleMapFragment extends Fragment {
+	private final static short RFID_SURVEY = 0, GNSS_SURVEY = 1, BOTH_SURVEY = 2;
+
 	private SupportMapFragment mapFragment;
 
 	private NowLocation nowLocation = null;
@@ -35,25 +34,49 @@ public class GoogleMapFragment extends Fragment {
 
 	private Bundle mapBundle = null;
 	private Handler mapHandler = null;
-	private TextView latlngText;
+	private TextView qzssOn, rfidOn, tagNumber, latlngText;
+	private EditText fileName;
+	private Button recordSurvey;
 	private boolean threadIsStopped = true;
+
+	private RecordingKML kml = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View rootView = inflater.inflate(R.layout.activity_main, container, false);
+		View rootView = inflater.inflate(R.layout.map_fragment, container, false);
 
+		qzssOn = (TextView)rootView.findViewById(R.id.qzss_on);
+		rfidOn = (TextView)rootView.findViewById(R.id.rfid_on);
+		tagNumber = (TextView)rootView.findViewById(R.id.tag_number);
 		latlngText = (TextView)rootView.findViewById(R.id.latlang);
+
+		fileName = (EditText)rootView.findViewById(R.id.filename);
+
+		recordSurvey = (Button)rootView.findViewById(R.id.record_survey);
 
 		if(mapHandler == null) mapHandler = new Handler();
 
-		if(mapBundle == null) mapBundle = new Bundle();
+		if(mapBundle == null) mapBundle = getArguments();
 		nowLocation = (NowLocation)mapBundle.getSerializable("NowLocation");
 
-		if(threadIsStopped) {
-			new Thread(mapLoop).start();
-			threadIsStopped = false;
-		}
+		recordSurvey.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if(kml == null) {
+					String name = fileName.getText().toString();
+					String path = "/storage/emulated/0/DCIM/" + name + ".kml";
+					kml = new RecordingKML(path);
+
+					recordSurvey.setText("REC FINISH");
+				} else {
+					kml.closeFile();
+					kml = null;
+
+					recordSurvey.setText("REC START");
+				}
+			}
+		});
 
 		return rootView;
 	}
@@ -63,12 +86,18 @@ public class GoogleMapFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
 		FragmentManager fm = getChildFragmentManager();
-		mapFragment = (SupportMapFragment)fm.findFragmentById(R.id.map_container);
+		mapFragment = (SupportMapFragment)fm.findFragmentById(R.id.map_frag);
 		if (mapFragment == null) {
 			mapFragment = SupportMapFragment.newInstance();
-			fm.beginTransaction().replace(R.id.map_container, mapFragment).commit();
+			fm.beginTransaction().replace(R.id.map_frag, mapFragment).commit();
 		}
+
 		setUpMapIfNeeded();
+
+		if(threadIsStopped) {
+			new Thread(mapLoop).start();
+			threadIsStopped = false;
+		}
 	}
 
 	@Override
@@ -85,29 +114,48 @@ public class GoogleMapFragment extends Fragment {
 		@Override
 		public void run() {
 			while(!threadIsStopped) {
-				nowLocation = (NowLocation)mapBundle.getSerializable("NowLocation");
+				if (nowLocation != null) {
 
-				mapHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						if (nowLocation != null) {
+					mapHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							short mode = nowLocation.surveyModeSelect();
+							switch(mode){
+								case RFID_SURVEY:
+									qzssOn.setText("QZSS_OFF");
+									rfidOn.setText("RFID ON");
+									break;
+								case BOTH_SURVEY:
+									qzssOn.setText("QZSS_ON");
+									rfidOn.setText("RFID_ON");
+									break;
+								case GNSS_SURVEY:
+									qzssOn.setText("QZSS_ON");
+									rfidOn.setText("RFID OFF");
+									break;
+							}
+
+							tagNumber.setText(String.valueOf(nowLocation.getTagId()));
 							LatLng surveyPoint = nowLocation.getNowPoint();
 
 							updateMap(surveyPoint.latitude, surveyPoint.longitude);
+							if(kml != null) kml.recordData(surveyPoint);
+
 							latlngText.setText("(" + surveyPoint.latitude
 									+ "," + surveyPoint.longitude + ")");
 						}
-					}
-				});
+					});
 
-				try {
-					Thread.sleep(500);
-				} catch(InterruptedException e) {
-					e.getStackTrace();
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.getStackTrace();
+					}
+					//Log.d("map", "Loop");
 				}
-				//Log.d("map", "Loop");
 			}
 		}
+
 	};
 
 	private void setUpMapIfNeeded() {

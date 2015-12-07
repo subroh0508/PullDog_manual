@@ -11,7 +11,7 @@ import java.util.List;
  * Created by root on 15/09/04.
  */
 public class NowLocation implements Serializable{
-    private final static short RFID_SURVEY = 0, GNSS_SURVEY = 1, BOTH_SURVEY = 2;
+    private final static short RFID_SURVEY = 0, GNSS_SURVEY = 1, BOTH_SURVEY = 2, SURVEY_ERROR = -1;
 
     private final static double LATITUDE_TO_METER = 111262.393;
     private final static double LONGITUDE_TO_METER = 91158.432; //東京での係数． 任意地点の近似だったら緯度の係数にcos掛ける. 正確には楕円モデルが必要．
@@ -24,7 +24,7 @@ public class NowLocation implements Serializable{
     private LatLng nowPoint, gnssPoint, pastGnssPoint, rfidPoint;
     private double nowVelocity;
 
-    private int tagId;
+    private int tagId, lastVisitedTag;
 
     private int visibleSatelite, usefulSatelite;
 
@@ -43,6 +43,7 @@ public class NowLocation implements Serializable{
         pastGnssPoint = gnssPoint;
 
         tagId = -1;
+        lastVisitedTag = -1;
 
         visibleSatelite = 0;
         usefulSatelite = 0;
@@ -64,7 +65,7 @@ public class NowLocation implements Serializable{
             CORRECTION_ON = false;
 
 
-        double valuelat = Double.valueOf(rNMEA[2]), valuelng = Double.valueOf(rNMEA[4]);;
+        double valuelat = Double.valueOf(rNMEA[2]), valuelng = Double.valueOf(rNMEA[4]);
         double deglat = Math.floor(valuelat / 100.0), deglng = Math.floor(valuelng / 100.0);
 
         if(rNMEA[3].charAt(0) == 'S') {
@@ -114,11 +115,15 @@ public class NowLocation implements Serializable{
             nowVelocity = 0.0;
     }
 
+    public void setTestPoint(double lat, double lng) { nowPoint = new LatLng(lat, lng); }
+
     public void setVelocity(double v) { nowVelocity = v; }
 
     public void setVisibleSatelite(int n) { visibleSatelite = n; }
 
     public void setUsefulSatelite(int n) { usefulSatelite = n; }
+
+    public int getTagId(){ return tagId; }
 
     public double getNowPointLat() { return nowPoint.latitude; }
 
@@ -198,12 +203,13 @@ public class NowLocation implements Serializable{
         return result.doubleValue();
     }
 
-    public void setTagId(int tag){ 
+    public void setTagId(int tag){
+        if(tag == 0 && tagId != 0) lastVisitedTag = tagId;
         tagId = tag;
         
         nowRfid = RfidLatLngList.getRfidById(tag);
 
-        if(nowRfid != null && !nowRfid.isInDoor())
+        if(tagId != 0 && nowRfid != null && !nowRfid.isInDoor())
             rfidPoint = new LatLng(nowRfid.getLat(), nowRfid.getLng());
         
     }
@@ -215,7 +221,7 @@ public class NowLocation implements Serializable{
             return false;
     }
 
-    private short surveyModeSelect(){
+    public short surveyModeSelect(){
         double diffRfidAndGnss;
 
         if(tagId != -1)
@@ -223,12 +229,14 @@ public class NowLocation implements Serializable{
         else
             diffRfidAndGnss = 10000000.0;
 
-        if(diffRfidAndGnss < BLOCK_SIZE*3 || isInDoor())
-            return RFID_SURVEY;
-        else if(diffRfidAndGnss < BLOCK_SIZE*20)
-            return BOTH_SURVEY;
-        else
+        if(BLOCK_SIZE*20 <= diffRfidAndGnss || lastVisitedTag == -1)
             return GNSS_SURVEY;
+        else if(diffRfidAndGnss < BLOCK_SIZE*20 && tagId == 0)
+            return BOTH_SURVEY;
+        else if(isInDoor() || tagId != 0)
+            return RFID_SURVEY;
+        else
+            return SURVEY_ERROR;
     }
 
     private double getDistance(LatLng p1, LatLng p2){

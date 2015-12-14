@@ -1,5 +1,7 @@
 package kei.balloon.pulldog;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
@@ -52,7 +54,7 @@ public class NowLocation implements Serializable{
     }
 
     public void setGnssPoint(String[] rNMEA) {
-        pastGnssPoint = gnssPoint;
+        pastGnssPoint = new LatLng(gnssPoint.latitude, gnssPoint.longitude);
 
         if(rNMEA[6].charAt(0) == 'N' && rNMEA[6].charAt(1) == 'N')
             SURVEY_EN = false;
@@ -82,7 +84,7 @@ public class NowLocation implements Serializable{
     }
 
     public void setGnssPoint(String indicator, double lat, double lng, double height, char NS, char EW) {
-        pastGnssPoint = gnssPoint;
+        pastGnssPoint = new LatLng(gnssPoint.latitude, gnssPoint.longitude);
 
         if(indicator.charAt(0) == 'N' && indicator.charAt(1) == 'N')
             SURVEY_EN = false;
@@ -130,13 +132,17 @@ public class NowLocation implements Serializable{
     public double getNowPointLng() { return nowPoint.longitude; }
 
     public LatLng getNowPoint() {
-        if(tagId != -1) {
+        if(lastVisitedTag != -1) {
             double latDiff = gnssPoint.latitude-pastGnssPoint.latitude;
             double lngDiff = gnssPoint.longitude-pastGnssPoint.longitude;
+            //Log.d("NowLocation","latDiff:"+latDiff+", lngDiff:"+lngDiff);
 
-            nowPoint = new LatLng(rfidPoint.latitude+latDiff, rfidPoint.longitude+lngDiff);
+            if(tagId != 0)
+                nowPoint = new LatLng(rfidPoint.latitude, rfidPoint.longitude);
+            else
+                nowPoint = new LatLng(nowPoint.latitude+latDiff, nowPoint.longitude+lngDiff);
         } else {
-            nowPoint = gnssPoint;
+            nowPoint = new LatLng(gnssPoint.latitude, gnssPoint.longitude);
         }
 
         switch(surveyModeSelect()){
@@ -147,9 +153,13 @@ public class NowLocation implements Serializable{
             case GNSS_SURVEY:
                 return gnssPoint;
             default:
-                return nowPoint;
+                return gnssPoint;
         }
     }
+
+    public LatLng getGnssPoint(){ return gnssPoint; }
+
+    public LatLng getRfidPoint(){ return rfidPoint; }
 
     public char getDirectionNS() {
         if(Math.signum(nowPoint.latitude) == -1.0) {
@@ -222,21 +232,23 @@ public class NowLocation implements Serializable{
     }
 
     public short surveyModeSelect(){
-        double diffRfidAndGnss;
+        double diffRfidAndNow = 1000000.0, diffGnssAndNow = 1000000.0;
 
-        if(tagId != -1)
-            diffRfidAndGnss = getDistance(rfidPoint, nowPoint);
-        else
-            diffRfidAndGnss = 10000000.0;
+        if(lastVisitedTag != -1) {
+            diffRfidAndNow = getDistance(rfidPoint, nowPoint);
+            diffGnssAndNow = getDistance(gnssPoint, nowPoint);
+        }
 
-        if(BLOCK_SIZE*20 <= diffRfidAndGnss || lastVisitedTag == -1)
-            return GNSS_SURVEY;
-        else if(diffRfidAndGnss < BLOCK_SIZE*20 && tagId == 0)
-            return BOTH_SURVEY;
-        else if(isInDoor() || tagId != 0)
+        Log.d("NowLocation", "Difference:"+diffRfidAndNow);
+
+        if(tagId == 0) {
+            if(1.0 <= diffGnssAndNow)
+                return BOTH_SURVEY;
+            else
+                return GNSS_SURVEY;
+        } else {
             return RFID_SURVEY;
-        else
-            return SURVEY_ERROR;
+        }
     }
 
     private double getDistance(LatLng p1, LatLng p2){

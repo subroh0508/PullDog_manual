@@ -28,6 +28,7 @@ import java.util.Iterator;
 public class MainActivity extends FragmentActivity implements Runnable, Serializable {
 
 	private final static String FILE_PATH = "ExperimentForKitano/TagList.txt";
+	private final static String FILE_PATH_TEST = "ExperimentForKitano/TagList_TNCT.txt";
 	private MainActivity activity;
 	private GoogleMapFragment mapFragment = new GoogleMapFragment();
 	private InformationFragment infoFragment = new InformationFragment();
@@ -247,7 +248,9 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 
 								arrangeData(rNMEA);
 								mQZSS.setLog(data);
-								Log.d("Main", mQZSS.getLog());
+								//Log.d("Main", mQZSS.getLog());
+								//Log.d("Main", "("+mNowLocation.getNowPoint().latitude+","
+										//+mNowLocation.getNowPoint().longitude+")");
 
 								i = 0;
 								mDataIsRead = false;
@@ -488,7 +491,7 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 
 					tagId = (((int) RFIDTag[6]) << 8) + (int) RFIDTag[7];
 
-					Log.d("main", "tagID:"+tagId);
+					//Log.d("main", "tagID:"+tagId);
 
 					mNowLocation.setTagId(tagId);
 

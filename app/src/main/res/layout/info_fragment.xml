@@ -4,6 +4,23 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
+	<RelativeLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+		<Button
+			android:id="@+id/convert_csv_to_kml"
+			android:text="CONVERT"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"/>
+		<EditText
+			android:id="@+id/filename_csv"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toLeftOf="@+id/record_survey"/>
+	</RelativeLayout>
+
 	<TextView
 		android:id="@+id/satelite_count"
 		android:layout_width="wrap_content"

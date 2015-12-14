@@ -20,6 +20,7 @@ public class Qzss extends Gnss implements Serializable{
 
     private int mMessage;
     private String nmeaLog = "No Log";
+    private boolean logGetFlag = false;
 
     public Qzss() {
         super();

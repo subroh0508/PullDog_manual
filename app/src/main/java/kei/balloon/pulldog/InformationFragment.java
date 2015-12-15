@@ -14,12 +14,15 @@ import android.widget.TextView;
  * Created by subroh0508 on 15/12/03.
  */
 public class InformationFragment extends Fragment{
+	private final static int RED = 0x66FF0000, ORANGE = 0x66FF6600, YELLOW = 0xFFFFFF00,
+			GREEN = 0x6600FF00, BLUE = 0x660000FF, WHITE = 0x00FFFFFF, BLACK = 0xFF000000;
+
 	private Bundle infoBundle = null;
 	private Qzss qzssInfo = null;
 	private Handler infoHandler = null;
 	private MainActivity activity;
 
-	private TextView sateliteCount, gnssLog;
+	private TextView sateliteCount, gnssLog, gnssOn, qzssOn, l1saifOn;
 	private EditText fileName;
 	private Button convertCsv;
 	private boolean threadIsStopped = true;
@@ -33,9 +36,16 @@ public class InformationFragment extends Fragment{
 
 		sateliteCount = (TextView)rootView.findViewById(R.id.satelite_count);
 		gnssLog = (TextView)rootView.findViewById(R.id.gnss_log_view);
+		gnssOn = (TextView)rootView.findViewById(R.id.glonass_on);
+		qzssOn = (TextView)rootView.findViewById(R.id.qzss_on);
+		l1saifOn = (TextView)rootView.findViewById(R.id.l1saif_on);
 
 		fileName = (EditText)rootView.findViewById(R.id.filename_csv);
 		convertCsv = (Button)rootView.findViewById(R.id.convert_csv_to_kml);
+
+		gnssOn.setBackgroundColor(WHITE);
+		qzssOn.setBackgroundColor(WHITE);
+		qzssOn.setBackgroundColor(WHITE);
 
 		if(infoHandler == null) infoHandler = new Handler();
 		if(infoBundle == null) infoBundle = getArguments();
@@ -72,15 +82,15 @@ public class InformationFragment extends Fragment{
 					infoHandler.post(new Runnable() {
 						@Override
 						public void run() {
-							int visible = 0;
-							int useful = 0;
+							int visible = 0, useful = 0;
 
 							visible = qzssInfo.getVisibleCount();
 							useful = qzssInfo.getUsefulCount();
 
-							gnssLog.append(qzssInfo.getLog() + "\n");
+							gnssLog.setText(qzssInfo.getLog() + "\n");
 
 							sateliteCount.setText("visible:" + visible + "  useful:" + useful);
+							updateTextView();
 						}
 					});
 
@@ -95,4 +105,23 @@ public class InformationFragment extends Fragment{
 			}
 		}
 	};
+
+	private void updateTextView(){
+		if(qzssInfo.GLONASS_ON)
+			gnssOn.setBackgroundColor(YELLOW);
+		else
+			gnssOn.setBackgroundColor(WHITE);
+
+		if(qzssInfo.QZSS_ON)
+			qzssOn.setBackgroundColor(GREEN);
+		else
+			qzssOn.setBackgroundColor(WHITE);
+
+		if(qzssInfo.L1SAIF_ON)
+			qzssOn.setBackgroundColor(BLUE);
+		else
+			qzssOn.setBackgroundColor(WHITE);
+
+
+	}
 }

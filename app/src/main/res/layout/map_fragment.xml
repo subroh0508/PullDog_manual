@@ -18,25 +18,29 @@
                 android:text="QZSS_OFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:textSize="20dp"/>
             <TextView
                 android:id="@+id/rfid_on"
                 android:text="RFID_OFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:textSize="20dp"/>
         </LinearLayout>
 
         <TextView
             android:id="@+id/tag_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:textSize="20dp"/>
         <TextView
             android:id="@+id/latlang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:textSize="20dp"/>
 
         <RelativeLayout
             android:orientation="horizontal"
@@ -52,6 +56,7 @@
                 android:id="@+id/filename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="20dp"
                 android:layout_toLeftOf="@+id/record_survey"/>
         </RelativeLayout>
 

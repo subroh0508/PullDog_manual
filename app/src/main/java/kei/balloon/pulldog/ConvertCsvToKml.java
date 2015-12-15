@@ -30,6 +30,7 @@ public class ConvertCsvToKml {
 			while(data != null) {
 				String tmp[] = data.split(",");
 				point.add(new LatLng(Double.valueOf(tmp[0]).doubleValue(), Double.valueOf(tmp[1]).doubleValue()));
+				data = reader.readLine();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

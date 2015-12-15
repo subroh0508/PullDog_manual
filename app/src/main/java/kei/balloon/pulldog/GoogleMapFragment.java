@@ -25,6 +25,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class GoogleMapFragment extends Fragment {
 	private final static short RFID_SURVEY = 0, GNSS_SURVEY = 1, BOTH_SURVEY = 2;
+	private final static int RED = 0x66FF0000, ORANGE = 0x66FF6600, YELLOW = 0xFFFFFF00,
+			GREEN = 0x6600FF00, BLUE = 0x660000FF, WHITE = 0x00FFFFFF, BLACK = 0xFF000000;
 
 	private SupportMapFragment mapFragment;
 
@@ -54,6 +56,8 @@ public class GoogleMapFragment extends Fragment {
 		fileName = (EditText)rootView.findViewById(R.id.filename);
 
 		recordSurvey = (Button)rootView.findViewById(R.id.record_survey);
+
+		updateTextView();
 
 		if(mapHandler == null) mapHandler = new Handler();
 
@@ -128,21 +132,7 @@ public class GoogleMapFragment extends Fragment {
 					mapHandler.post(new Runnable() {
 						@Override
 						public void run() {
-							short mode = nowLocation.surveyModeSelect();
-							switch(mode){
-								case RFID_SURVEY:
-									qzssOn.setText("QZSS_OFF");
-									rfidOn.setText("RFID ON");
-									break;
-								case BOTH_SURVEY:
-									qzssOn.setText("QZSS_ON");
-									rfidOn.setText("RFID_ON");
-									break;
-								case GNSS_SURVEY:
-									qzssOn.setText("QZSS_ON");
-									rfidOn.setText("RFID OFF");
-									break;
-							}
+							updateTextView();
 
 							tagNumber.setText(String.valueOf(nowLocation.getTagId()));
 							LatLng surveyPoint = nowLocation.getNowPoint();
@@ -189,5 +179,41 @@ public class GoogleMapFragment extends Fragment {
 
 		//CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 25f);
 		//googleMap.moveCamera(cu);
+	}
+
+	public void updateTextView() {
+		if(nowLocation != null){
+			short mode = nowLocation.surveyModeSelect();
+			switch(mode){
+				case RFID_SURVEY:
+					qzssOn.setText("QZSS_OFF");
+					rfidOn.setText("RFID ON");
+					break;
+				case BOTH_SURVEY:
+					qzssOn.setText("QZSS_ON");
+					rfidOn.setText("RFID_ON");
+					break;
+				case GNSS_SURVEY:
+					qzssOn.setText("QZSS_ON");
+					rfidOn.setText("RFID OFF");
+					break;
+			}
+
+			if(nowLocation.SURVEY_EN) {
+				qzssOn.setBackgroundColor(YELLOW);
+				rfidOn.setBackgroundColor(YELLOW);
+
+				if(nowLocation.CORRECTION_ON) {
+					qzssOn.setBackgroundColor(GREEN);
+					rfidOn.setBackgroundColor(GREEN);
+				}
+			} else {
+				qzssOn.setBackgroundColor(RED);
+				rfidOn.setBackgroundColor(RED);
+			}
+		} else {
+			qzssOn.setBackgroundColor(RED);
+			rfidOn.setBackgroundColor(RED);
+		}
 	}
 }

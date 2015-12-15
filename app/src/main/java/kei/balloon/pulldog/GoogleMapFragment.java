@@ -67,7 +67,7 @@ public class GoogleMapFragment extends Fragment {
 		recordSurvey.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(kml == null) {
+				if (kml == null) {
 					String name = fileName.getText().toString();
 					String path = R.string.file_path + name + ".csv";
 					kml = new RecordingKML(path);
@@ -117,10 +117,10 @@ public class GoogleMapFragment extends Fragment {
 	public void onPause(){
 		super.onPause();
 
-
 		threadIsStopped = true;
 		FragmentTransaction ft = getChildFragmentManager().beginTransaction();
 		ft.remove(mapFragment).commit();
+		googleMap = null;
 	}
 
 	private final Runnable mapLoop = new Runnable() {
@@ -168,6 +168,12 @@ public class GoogleMapFragment extends Fragment {
 			if (googleMap != null) {
 				updateMap(0.0, 0.0);
 			}
+		} else {
+			if(nowLocation != null) {
+				LatLng surveyPoint = nowLocation.getNowPoint();
+				updateMap(surveyPoint.latitude, surveyPoint.longitude);
+			} else
+				updateMap(0.0, 0.0);
 		}
 	}
 

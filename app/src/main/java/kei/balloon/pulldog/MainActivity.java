@@ -14,6 +14,9 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -32,6 +35,9 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 	private MainActivity activity;
 	private GoogleMapFragment mapFragment = new GoogleMapFragment();
 	private InformationFragment infoFragment = new InformationFragment();
+
+	private Button recordSurvey;
+	private EditText fileName;
 
 	// USB1関係変数定義
 	private UsbManager mUsbManager;
@@ -90,6 +96,8 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 	private Bundle infoBundle, mapBundle;
 	private double testlat = 0.0, testlng = 0.0;
 
+	private RecordingCSV kml = null, gnssCsv = null, rfidCsv = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,6 +108,7 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 
 		//TagList読み込み
 		tagList = new RfidManager(this, FILE_PATH);
+		//tagList = new RfidManager(this, FILE_PATH_TEST);
 
 		//みちびき FTDIのインスタンスをとってくる
 		mNowLocation = new NowLocation(tagList);
@@ -115,7 +124,7 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 		mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
-		FragmentTabHost tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+		FragmentTabHost tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup(this, getSupportFragmentManager(), R.id.content);
 
 		TabHost.TabSpec infoTab = tabHost.newTabSpec("Information").setIndicator("Info");
@@ -127,6 +136,35 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 		mapBundle = new Bundle();
 		mapBundle.putSerializable("NowLocation", mNowLocation);
 		tabHost.addTab(mapTab, GoogleMapFragment.class, mapBundle);
+
+		fileName = (EditText)findViewById(R.id.filename);
+		recordSurvey = (Button)findViewById(R.id.record_survey);
+		recordSurvey.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (kml == null) {
+					String name = fileName.getText().toString();
+					String path = getString(R.string.file_path) + name + ".csv";
+					kml = new RecordingCSV(path);
+
+					path = getString(R.string.file_path) + name + "_gnss.csv";
+					gnssCsv = new RecordingCSV(path);
+					path = getString(R.string.file_path) + name + "_rfid.csv";
+					rfidCsv = new RecordingCSV(path);
+
+					recordSurvey.setText("REC FINISH");
+				} else {
+					kml.closeFile();
+					gnssCsv.closeFile();
+					rfidCsv.closeFile();
+					kml = null;
+					gnssCsv = null;
+					rfidCsv = null;
+
+					recordSurvey.setText("REC START");
+				}
+			}
+		});
 	}
 
 
@@ -148,8 +186,8 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 	}
 
 	/*****
-	 * アプリ終了時クローズ処理
-	 *****/
+		 * アプリ終了時クローズ処理
+	*****/
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -250,7 +288,7 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 								mQZSS.setLog(data);
 								//Log.d("Main", mQZSS.getLog());
 								//Log.d("Main", "("+mNowLocation.getNowPoint().latitude+","
-										//+mNowLocation.getNowPoint().longitude+")");
+								//		+mNowLocation.getNowPoint().longitude+")");
 
 								i = 0;
 								mDataIsRead = false;
@@ -276,6 +314,7 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 			if(rNMEA[0].equals("GPGNS")) {
 				mQZSS.setGPS(rNMEA);
 				mNowLocation.setGnssPoint(rNMEA);
+				if(gnssCsv != null) gnssCsv.recordData(mNowLocation.getGnssPoint());
 			} else if(rNMEA[0].equals("GLGNS")) {
 				mQZSS.setGLONASS(rNMEA);
 				mNowLocation.setGnssPoint(rNMEA);
@@ -383,8 +422,8 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 	}
 
 	/*****
-	 * USBデバイス接続処理
-	 *****/
+		 * USBデバイス接続処理
+	*****/
 	private boolean setDevice(UsbDevice device) {
 		// デバイスインタフェース検出
 		if (device.getInterfaceCount() != 1) {
@@ -460,8 +499,8 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 	}
 
 	/*****
-	 * 状態取得コマンド送信メソッド
-	 *****/
+		 * 状態取得コマンド送信メソッド
+	*****/
 	private void sendStatusCommand() {
 		synchronized (this) {                // 排他制御で実行
 			if (mConnection != null) {
@@ -474,8 +513,8 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 	}
 
 	/*****
-	 * USBデータ状態受信スレッド
-	 *****/
+		 * USBデータ状態受信スレッド
+	*****/
 	public void run() {
 
 		if (GPSReady)
@@ -494,6 +533,7 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 					//Log.d("main", "tagID:"+tagId);
 
 					mNowLocation.setTagId(tagId);
+					if(rfidCsv != null) rfidCsv.recordData(mNowLocation.getRfidPoint());
 
 					try {
 						usbThread.sleep(USB_SLEEP);            //インターバル
@@ -513,3 +553,5 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 		}
 	}
 }
+
+

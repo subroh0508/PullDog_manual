@@ -37,11 +37,9 @@ public class GoogleMapFragment extends Fragment {
 	private Bundle mapBundle = null;
 	private Handler mapHandler = null;
 	private TextView qzssOn, rfidOn, tagNumber, latlngText;
-	private EditText fileName;
-	private Button recordSurvey;
 	private boolean threadIsStopped = true;
 
-	private RecordingKML kml = null, gnssCsv = null, rfidCsv = null;
+	private RecordingCSV kml = null, gnssCsv = null, rfidCsv = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,43 +51,12 @@ public class GoogleMapFragment extends Fragment {
 		tagNumber = (TextView)rootView.findViewById(R.id.tag_number);
 		latlngText = (TextView)rootView.findViewById(R.id.latlang);
 
-		fileName = (EditText)rootView.findViewById(R.id.filename);
-
-		recordSurvey = (Button)rootView.findViewById(R.id.record_survey);
-
 		updateTextView();
 
 		if(mapHandler == null) mapHandler = new Handler();
 
 		if(mapBundle == null) mapBundle = getArguments();
 		if(nowLocation == null)nowLocation = (NowLocation)mapBundle.getSerializable("NowLocation");
-
-		recordSurvey.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (kml == null) {
-					String name = fileName.getText().toString();
-					String path = R.string.file_path + name + ".csv";
-					kml = new RecordingKML(path);
-
-					path = R.string.file_path + name + "_gnss.csv";
-					gnssCsv = new RecordingKML(path);
-					path = R.string.file_path + name + "_rfid.csv";
-					rfidCsv = new RecordingKML(path);
-
-					recordSurvey.setText("REC FINISH");
-				} else {
-					kml.closeFile();
-					gnssCsv.closeFile();
-					rfidCsv.closeFile();
-					kml = null;
-					gnssCsv = null;
-					rfidCsv = null;
-
-					recordSurvey.setText("REC START");
-				}
-			}
-		});
 
 		return rootView;
 	}
@@ -139,9 +106,6 @@ public class GoogleMapFragment extends Fragment {
 
 							updateMap(surveyPoint.latitude, surveyPoint.longitude);
 							if(kml != null) kml.recordData(surveyPoint);
-							if(gnssCsv != null) gnssCsv.recordData(nowLocation.getGnssPoint());
-							if(rfidCsv != null) rfidCsv.recordData(nowLocation.getRfidPoint());
-
 							latlngText.setText("(" + surveyPoint.latitude
 									+ "," + surveyPoint.longitude + ")");
 						}

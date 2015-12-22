@@ -42,24 +42,6 @@
             android:layout_margin="5dp"
             android:textSize="20dp"/>
 
-        <RelativeLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/record_survey"
-                android:text="REC START"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"/>
-            <EditText
-                android:id="@+id/filename"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:layout_toLeftOf="@+id/record_survey"/>
-        </RelativeLayout>
-
         <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/map_frag"

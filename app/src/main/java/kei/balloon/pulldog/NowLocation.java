@@ -24,6 +24,7 @@ public class NowLocation implements Serializable{
     public boolean SURVEY_EN, CORRECTION_ON;
 
     private LatLng nowPoint, gnssPoint, pastGnssPoint, rfidPoint;
+    private double latDiff = 0.0, lngDiff = 0.0;
     private double nowVelocity;
 
     private int tagId, lastVisitedTag;
@@ -54,6 +55,8 @@ public class NowLocation implements Serializable{
     }
 
     public void setGnssPoint(String[] rNMEA) {
+        latDiff = gnssPoint.latitude-pastGnssPoint.latitude;
+        lngDiff = gnssPoint.longitude-pastGnssPoint.longitude;
         pastGnssPoint = new LatLng(gnssPoint.latitude, gnssPoint.longitude);
 
         if(rNMEA[6].charAt(0) == 'N' && rNMEA[6].charAt(1) == 'N')
@@ -133,8 +136,6 @@ public class NowLocation implements Serializable{
 
     public LatLng getNowPoint() {
         if(lastVisitedTag != -1) {
-            double latDiff = gnssPoint.latitude-pastGnssPoint.latitude;
-            double lngDiff = gnssPoint.longitude-pastGnssPoint.longitude;
             //Log.d("NowLocation","latDiff:"+latDiff+", lngDiff:"+lngDiff);
 
             if(tagId != 0)

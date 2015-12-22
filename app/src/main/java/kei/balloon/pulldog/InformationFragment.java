@@ -27,7 +27,7 @@ public class InformationFragment extends Fragment{
 	private Button convertCsv;
 	private boolean threadIsStopped = true;
 
-	private ConvertCsvToKml csvToKml;
+	private ConvertCsvToKml csvToKml, gnssCsvToKml, rfidCsvToKml;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +60,11 @@ public class InformationFragment extends Fragment{
 			@Override
 			public void onClick(View view) {
 				csvToKml = new ConvertCsvToKml(fileName.getText().toString());
-				csvToKml.convert();
+				gnssCsvToKml = new ConvertCsvToKml(fileName.getText().toString()+"_gnss");
+				rfidCsvToKml = new ConvertCsvToKml(fileName.getText().toString()+"_rfid");
+
+				if(csvToKml.convert() && gnssCsvToKml.convert() && rfidCsvToKml.convert())
+					convertCsv.setText("SUCCESS!");
 			}
 		});
 

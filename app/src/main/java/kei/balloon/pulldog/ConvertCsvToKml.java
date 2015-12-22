@@ -16,13 +16,13 @@ import java.util.List;
  */
 public class ConvertCsvToKml {
 	private BufferedReader reader;
-	private RecordingKML kml;
+	private RecordingKML kml, gnssKml, rfidKml;
 	private String fileName;
 
 	private List<LatLng> point = new ArrayList<>();
 
 	public ConvertCsvToKml(String s) {
-		String path = new String(R.string.file_path+s+".csv"), data;
+		String path = new String("/storage/emulated/0/DCIM/"+s+".csv"), data;
 
 		try {
 			reader = new BufferedReader(new FileReader(new File(path)));
@@ -36,7 +36,7 @@ public class ConvertCsvToKml {
 			e.printStackTrace();
 		}
 
-		kml = new RecordingKML(R.string.file_path+s+".kml");
+		kml = new RecordingKML("/storage/emulated/0/DCIM/"+s+".kml");
 	}
 
 	public boolean convert() { return kml.closeFile(point); }

@@ -27,7 +27,7 @@ public class RecordingCSV {
 
 	private List<LatLng> route = new ArrayList<>();
 	private List<String> time = new ArrayList<>();
-	private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.sss yyyy/MM/dd");
+	private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS yyyy/MM/dd");
 
 	public RecordingCSV(String s) {
 		fileName = s;
@@ -44,7 +44,7 @@ public class RecordingCSV {
 		time.add(dateFormat.format(date));
 
 		route.add(point);
-		Log.d("Log", "("+point.latitude+","+point.longitude+")"+":"+dateFormat.format(date));
+		Log.d("Log", "(" + point.latitude + "," + point.longitude + ")" + ":" + dateFormat.format(date));
 	}
 
 	public boolean closeFile(){

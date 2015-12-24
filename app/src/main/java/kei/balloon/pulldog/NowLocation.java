@@ -225,6 +225,16 @@ public class NowLocation implements Serializable{
         
     }
 
+    public LatLng tagIdToLatLng(int tag){
+        nowRfid = RfidLatLngList.getRfidById(tag);
+
+        if(tagId != 0 && nowRfid != null && !nowRfid.isInDoor())
+            return new LatLng(nowRfid.getLat(), nowRfid.getLng());
+        else
+            return new LatLng(0.0, 0.0);
+
+    }
+
     public boolean isInDoor(){
         if(nowRfid != null && nowRfid.isInDoor())
             return true;

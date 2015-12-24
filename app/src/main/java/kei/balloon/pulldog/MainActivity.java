@@ -96,7 +96,8 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 	private Bundle infoBundle, mapBundle;
 	private double testlat = 0.0, testlng = 0.0;
 
-	private RecordingCSV kml = null, gnssCsv = null, rfidCsv = null;
+	private RecordingCSV gnssCsv = null, rfidCsv = null;
+	private boolean csvIsRecording = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -142,26 +143,25 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 		recordSurvey.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (kml == null) {
-					String name = fileName.getText().toString();
-					String path = getString(R.string.file_path) + name + ".csv";
-					kml = new RecordingCSV(path);
+				if (gnssCsv == null || rfidCsv == null) {
+					csvIsRecording = false;
 
-					path = getString(R.string.file_path) + name + "_gnss.csv";
+					String name = fileName.getText().toString();
+					String path = getString(R.string.file_path) + name + "_gnss.csv";
 					gnssCsv = new RecordingCSV(path);
 					path = getString(R.string.file_path) + name + "_rfid.csv";
 					rfidCsv = new RecordingCSV(path);
 
 					recordSurvey.setText("REC FINISH");
 				} else {
-					kml.closeFile();
-					gnssCsv.closeFile();
-					rfidCsv.closeFile();
-					kml = null;
+					csvIsRecording = true;
+					if(!gnssCsv.closeFile() || !rfidCsv.closeFile())
+						recordSurvey.setText("REC FAILURE...");
+					else
+						recordSurvey.setText("REC SUCCESS!");
+
 					gnssCsv = null;
 					rfidCsv = null;
-
-					recordSurvey.setText("REC START");
 				}
 			}
 		});
@@ -314,7 +314,6 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 			if(rNMEA[0].equals("GPGNS")) {
 				mQZSS.setGPS(rNMEA);
 				mNowLocation.setGnssPoint(rNMEA);
-				if(gnssCsv != null) gnssCsv.recordData(mNowLocation.getGnssPoint());
 			} else if(rNMEA[0].equals("GLGNS")) {
 				mQZSS.setGLONASS(rNMEA);
 				mNowLocation.setGnssPoint(rNMEA);
@@ -335,6 +334,8 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 			} else if(rNMEA[0].equals("GNVTG")) {
 				mNowLocation.setVelocity(rNMEA);
 			}
+
+			if(gnssCsv != null && !csvIsRecording) gnssCsv.recordData(mNowLocation.getGnssPoint());
 		}
 	}
 
@@ -530,10 +531,10 @@ public class MainActivity extends FragmentActivity implements Runnable, Serializ
 
 					tagId = (((int) RFIDTag[6]) << 8) + (int) RFIDTag[7];
 
-					//Log.d("main", "tagID:"+tagId);
+					Log.d("main", "tagID:"+tagId);
 
 					mNowLocation.setTagId(tagId);
-					if(rfidCsv != null) rfidCsv.recordData(mNowLocation.getRfidPoint());
+					if(rfidCsv != null && !csvIsRecording) rfidCsv.recordData(mNowLocation.tagIdToLatLng(tagId));
 
 					try {
 						usbThread.sleep(USB_SLEEP);            //インターバル

@@ -1,11 +1,12 @@
 package kei.balloon.pulldog;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by root on 15/09/04.
  */
-public class QZSS extends GNSS {
+public class Qzss extends Gnss implements Serializable{
     public boolean QZSS_ON, L1SAIF_ON;
 
     private final static int QZSS_NUM[] = {193}, L1SAIF_NUM[] = {55};
@@ -18,8 +19,10 @@ public class QZSS extends GNSS {
     private int mL1SAIFSNRate;
 
     private int mMessage;
+    private String nmeaLog = "No Log";
+    private boolean logGetFlag = false;
 
-    public QZSS() {
+    public Qzss() {
         super();
 
         mVisibleQZSS = new ArrayList<>();
@@ -79,6 +82,8 @@ public class QZSS extends GNSS {
         }
     }
 
+    public void setLog(String nmea) { nmeaLog = new String(nmea); }
+
     public void checkL1SAIF() {
         L1SAIF_ON = false;
 
@@ -103,4 +108,6 @@ public class QZSS extends GNSS {
     public int getL1SAIFSNRate() { return mL1SAIFSNRate; }
 
     public SatelitePotision searchQZSSPotision(int id) { return mQZSSPotision.get(mVisibleQZSS.indexOf(id)); }
+
+    public String getLog() { return nmeaLog; }
 }

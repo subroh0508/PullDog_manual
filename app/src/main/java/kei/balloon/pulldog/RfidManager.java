@@ -3,17 +3,18 @@ package kei.balloon.pulldog;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by kazuki on 2015/09/09.
  */
-public class RfidManager {
+public class RfidManager implements Serializable{
     private List<Rfid> tagList;
     private MainActivity context;
 
-    public RfidManager(MainActivity ma,  String tagListName){
+    public RfidManager(MainActivity ma, String tagListName){
         context = ma;
         tagList = new ArrayList<Rfid>();
         importData(tagListName);
